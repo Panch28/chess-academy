@@ -1,23 +1,28 @@
-import { Renderer, Camera, Transform, Plane, Orbit, Mesh, Program } from 'ogl';
+import { Renderer, Camera, Transform, Plane, Mesh, Program, Texture } from 'ogl';
 
-const vertexShader = `
-    attribute vec2 uv;
+const vertex = /* glsl */`
     attribute vec3 position;
+    attribute vec2 uv;
+    uniform mat4 modelViewMatrix;
+    uniform mat4 projectionMatrix;
     varying vec2 vUv;
     void main() {
         vUv = uv;
-        gl_Position = vec4(position, 1.0);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
 `;
 
-const fragmentShader = `
+const fragment = /* glsl */`
     precision highp float;
     uniform sampler2D tMap;
     uniform float uAlpha;
+    uniform float uGrayscale;
     varying vec2 vUv;
     void main() {
         vec4 tex = texture2D(tMap, vUv);
-        gl_FragColor = vec4(tex.rgb, tex.a * uAlpha);
+        float gray = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
+        vec3 color = mix(vec3(gray), tex.rgb, 1.0 - uGrayscale);
+        gl_FragColor = vec4(color, tex.a * uAlpha);
     }
 `;
 
@@ -26,7 +31,7 @@ export default class CircularGallery {
         element,
         items = [],
         bend = 3,
-        textColor = '#ffffff',
+        textColor = '#d4af37',
         borderRadius = 0.05,
         scrollSpeed = 1,
         scrollEase = 0.05
@@ -38,155 +43,190 @@ export default class CircularGallery {
         this.borderRadius = borderRadius;
         this.scrollSpeed = scrollSpeed;
         this.scrollEase = scrollEase;
-        
+
         this.scroll = 0;
         this.targetScroll = 0;
         this.isDragging = false;
-        this.dragStart = 0;
-        this.lastDrag = 0;
-        
+        this.lastX = 0;
+        this.rafId = null;
+        this.planes = [];
+
         this.init();
     }
-    
-    init() {
-        this.renderer = new Renderer({ alpha: true, dpr: Math.min(window.devicePixelRatio, 2) });
-        this.gl = this.renderer.gl;
-        this.gl.canvas.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        `;
-        this.element.appendChild(this.gl.canvas);
-        
-        this.camera = new Camera(this.gl, { fov: 45 });
-        this.camera.position.set(0, 0, 6);
-        
-        this.scene = new Transform();
-        
-        this.resize();
-        this.createGeometry();
-        this.setupEvents();
-        this.update();
+
+    get isMobile() {
+        return window.innerWidth <= 768;
     }
-    
-    createGeometry() {
+
+    get cardWidth() {
+        return this.isMobile ? 1.0 : 1.4;
+    }
+
+    get cardHeight() {
+        return this.isMobile ? 1.6 : 2.0;
+    }
+
+    init() {
+        this.renderer = new Renderer({
+            alpha: true,
+            antialias: true,
+            dpr: Math.min(window.devicePixelRatio, 2)
+        });
+        this.gl = this.renderer.gl;
+
+        Object.assign(this.gl.canvas.style, {
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            touchAction: 'none'
+        });
+
+        this.element.appendChild(this.gl.canvas);
+
+        this.camera = new Camera(this.gl, { fov: 45 });
+        this.camera.position.z = this.isMobile ? 7 : 6;
+
+        this.scene = new Transform();
         this.group = new Transform();
+        this.group.setParent(this.scene);
+
+        this.resize();
+        this.buildPlanes();
+        this.bindEvents();
+        this.tick();
+    }
+
+    buildPlanes() {
+        // Clear old planes
+        this.planes.forEach(p => p.setParent(null));
         this.planes = [];
-        
-        const spacing = 1.5;
+
         const count = this.items.length;
-        
+        const radius = this.isMobile ? 2.5 : this.bend;
+
         for (let i = 0; i < count; i++) {
             const angle = (i / count) * Math.PI * 2;
-            const x = Math.sin(angle) * this.bend;
-            const z = Math.cos(angle) * this.bend - this.bend;
-            
-            const plane = new Mesh(this.gl, {
+            const x = Math.sin(angle) * radius;
+            const z = Math.cos(angle) * radius - radius;
+
+            const texture = new Texture(this.gl);
+
+            const mesh = new Mesh(this.gl, {
                 geometry: new Plane(this.gl, {
-                    width: 1.4,
-                    height: 2,
+                    width: this.cardWidth,
+                    height: this.cardHeight,
                 }),
                 program: new Program(this.gl, {
-                    vertex: vertexShader,
-                    fragment: fragmentShader,
+                    vertex,
+                    fragment,
                     uniforms: {
-                        tMap: { value: null },
-                        uAlpha: { value: 1 }
+                        tMap: { value: texture },
+                        uAlpha: { value: 1.0 },
+                        uGrayscale: { value: 0.8 }
                     },
                     transparent: true,
+                    depthTest: false,
                 }),
             });
-            
-            plane.position.x = x;
-            plane.position.z = z;
-            plane.rotation.y = -angle;
-            
+
+            mesh.position.x = x;
+            mesh.position.z = z;
+            mesh.rotation.y = -angle;
+            mesh.setParent(this.group);
+            this.planes.push(mesh);
+
+            // Load image
+            const src = (this.items[i] && this.items[i].image) ? this.items[i].image : this.items[i];
             const img = new Image();
             img.crossOrigin = 'anonymous';
-            img.src = this.items[i];
+            img.src = src;
             img.onload = () => {
-                const texture = this.renderer.createTexture(img);
-                plane.program.uniforms.tMap.value = texture;
+                texture.image = img;
+                texture.needsUpdate = true;
             };
-            
-            this.planes.push(plane);
-            this.group.addChild(plane);
         }
-        
-        this.scene.addChild(this.group);
     }
-    
-    setupEvents() {
-        const onPointerDown = (e) => {
+
+    bindEvents() {
+        const canvas = this.gl.canvas;
+
+        // Mouse
+        canvas.addEventListener('mousedown', e => {
             this.isDragging = true;
-            this.dragStart = e.clientX || e.touches?.[0]?.clientX || 0;
-            this.lastDrag = this.dragStart;
-        };
-        
-        const onPointerMove = (e) => {
+            this.lastX = e.clientX;
+        });
+        window.addEventListener('mousemove', e => {
             if (!this.isDragging) return;
-            const current = e.clientX || e.touches?.[0]?.clientX || 0;
-            const delta = (current - this.lastDrag) * 0.005;
-            this.targetScroll -= delta * this.scrollSpeed;
-            this.lastDrag = current;
-        };
-        
-        const onPointerUp = () => {
-            this.isDragging = false;
-        };
-        
-        this.gl.canvas.addEventListener('mousedown', onPointerDown);
-        this.gl.canvas.addEventListener('mousemove', onPointerMove);
-        this.gl.canvas.addEventListener('mouseup', onPointerUp);
-        this.gl.canvas.addEventListener('mouseleave', onPointerUp);
-        this.gl.canvas.addEventListener('touchstart', onPointerDown, { passive: true });
-        this.gl.canvas.addEventListener('touchmove', onPointerMove, { passive: true });
-        this.gl.canvas.addEventListener('touchend', onPointerUp);
-        
-        window.addEventListener('resize', () => this.resize());
-        
-        // Mouse wheel scroll
-        this.gl.canvas.addEventListener('wheel', (e) => {
+            const dx = e.clientX - this.lastX;
+            this.targetScroll -= dx * 0.003 * this.scrollSpeed;
+            this.lastX = e.clientX;
+        });
+        window.addEventListener('mouseup', () => { this.isDragging = false; });
+
+        // Touch
+        canvas.addEventListener('touchstart', e => {
+            this.isDragging = true;
+            this.lastX = e.touches[0].clientX;
+        }, { passive: true });
+        canvas.addEventListener('touchmove', e => {
+            if (!this.isDragging) return;
+            const dx = e.touches[0].clientX - this.lastX;
+            this.targetScroll -= dx * 0.003 * this.scrollSpeed;
+            this.lastX = e.touches[0].clientX;
+        }, { passive: true });
+        canvas.addEventListener('touchend', () => { this.isDragging = false; });
+
+        // Wheel
+        canvas.addEventListener('wheel', e => {
             e.preventDefault();
             this.targetScroll += e.deltaY * 0.001 * this.scrollSpeed;
         }, { passive: false });
-    }
-    
-    resize() {
-        const rect = this.element.getBoundingClientRect();
-        this.renderer.setSize(rect.width, rect.height);
-        this.camera.perspective({ aspect: rect.width / rect.height });
-    }
-    
-    update() {
-        requestAnimationFrame(() => this.update());
-        
-        // Smooth scroll interpolation
-        this.scroll += (this.targetScroll - this.scroll) * this.scrollEase;
-        
-        // Rotate group based on scroll
-        this.group.rotation.y = this.scroll;
-        
-        // Update plane positions and opacity based on visibility
-        this.planes.forEach((plane, i) => {
-            const worldPos = new Transform();
-            worldPos.position = plane.position;
-            worldPos.parent = this.group;
-            worldPos.updateMatrix();
-            
-            const z = worldPos.position.z;
-            const dist = Math.abs(z + this.bend);
-            
-            // Fade based on distance
-            plane.program.uniforms.uAlpha.value = Math.max(0, 1 - dist * 0.3);
+
+        // Resize debounced
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                this.resize();
+                this.buildPlanes();
+            }, 150);
         });
-        
+    }
+
+    resize() {
+        const w = this.element.clientWidth;
+        const h = this.element.clientHeight;
+        this.renderer.setSize(w, h);
+        if (this.camera) {
+            this.camera.perspective({ aspect: w / h });
+            this.camera.position.z = this.isMobile ? 7 : 6;
+        }
+    }
+
+    tick() {
+        this.rafId = requestAnimationFrame(() => this.tick());
+
+        this.scroll += (this.targetScroll - this.scroll) * this.scrollEase;
+        this.group.rotation.y = this.scroll;
+
+        const count = this.planes.length;
+        this.planes.forEach((plane, i) => {
+            const angle = (i / count) * Math.PI * 2;
+            const effective = ((angle + this.scroll) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+            const dist = Math.abs(effective - Math.PI);
+            const normalized = dist / Math.PI; // 0 = front center, 1 = back
+
+            plane.program.uniforms.uGrayscale.value = Math.min(1, normalized * 1.5);
+            plane.program.uniforms.uAlpha.value = Math.max(0.1, 1 - normalized * 0.7);
+        });
+
         this.renderer.render({ scene: this.scene, camera: this.camera });
     }
-    
+
     destroy() {
+        cancelAnimationFrame(this.rafId);
         this.gl.canvas.remove();
     }
 }

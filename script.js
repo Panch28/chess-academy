@@ -619,14 +619,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.stagger-about').forEach(el => staggerObserver.observe(el));
 });
 
-// Pure CSS 3D Circular Gallery
+// Pure CSS 3D Curved Gallery
 function init3DGallery() {
     const wrapper = document.getElementById('circularGallery');
     const track = document.getElementById('galleryTrack');
     const centerLabel = document.getElementById('centerLabel');
     const prevBtn = document.getElementById('galleryPrev');
     const nextBtn = document.getElementById('galleryNext');
-    
     if (!wrapper || !track) return;
     
     const galleryItems = [
@@ -640,19 +639,7 @@ function init3DGallery() {
         { image: 'https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?w=800&q=80', text: 'Victory' }
     ];
     
-    const itemCount = galleryItems.length;
-    const angleStep = 360 / itemCount;
-    const radius = 350;
-    const bend = 45;
-    
-    let currentAngle = 0;
-    let targetAngle = 0;
-    let velocity = 0;
-    let isDragging = false;
-    let lastX = 0;
-    let animationId = null;
-    
-    // Create gallery items
+    // Create initial fallback gallery items
     galleryItems.forEach((item, index) => {
         const galleryItem = document.createElement('div');
         galleryItem.className = 'gallery-item-3d';
@@ -665,133 +652,188 @@ function init3DGallery() {
         galleryItem.dataset.index = index;
         track.appendChild(galleryItem);
     });
+
+    let currentScroll = 0;
+    let targetScroll = 0;
+    let velocity = 0;
+    let isDragging = false;
+    let lastX = 0;
+    let animationId = null;
+    let autoPlayTimer = null;
+    let autoplayPaused = false;
     
-    function updateGallery() {
-        const items = track.querySelectorAll('.gallery-item-3d');
-        
-        items.forEach((item, index) => {
-            const angle = (index * angleStep + currentAngle) % 360;
-            const radian = (angle * Math.PI) / 180;
-            
-            const x = Math.sin(radian) * radius;
-            const z = Math.cos(radian) * radius - radius;
-            const rotateY = -angle;
-            
-            const normalizedAngle = ((angle % 360) + 360) % 360;
-            const isCenter = normalizedAngle > 330 || normalizedAngle < 30;
-            const scale = isCenter ? 1 : 0.7 + Math.abs(Math.cos(radian)) * 0.3;
-            const opacity = isCenter ? 1 : 0.4 + Math.abs(Math.cos(radian)) * 0.6;
-            
-            item.style.transform = `
-                translateX(${x}px)
-                translateZ(${z}px)
-                rotateY(${rotateY}deg)
-                scale(${scale})
-            `;
-            item.style.opacity = opacity;
-            item.style.zIndex = isCenter ? 10 : 1;
-            
-            if (isCenter) {
-                centerLabel.textContent = item.querySelector('.item-label').textContent;
+    function startAutoplay() {
+        if(autoPlayTimer) clearInterval(autoPlayTimer);
+        autoPlayTimer = setInterval(() => {
+            if(!autoplayPaused) {
+                targetScroll += getSpacing();
             }
-        });
-        
-        centerLabel.classList.add('active');
+        }, 4000); // Auto advances every 4 seconds
     }
     
+    function resetAutoplay() {
+        startAutoplay();
+    }
+    
+    function getSpacing() {
+        return window.innerWidth <= 768 ? window.innerWidth * 0.75 + 15 : 400 + 40; // width + gap
+    }
+
+    function updateGallery() {
+        const items = track.querySelectorAll('.gallery-item-3d');
+        if (items.length === 0) return;
+        
+        const spacing = getSpacing();
+        const maxScroll = (items.length - 1) * spacing;
+        
+        // Auto-wrap scroll for seamless loop if it gets too far, or just constrain it
+        if(currentScroll > maxScroll + spacing) {
+            currentScroll = 0;
+            targetScroll = 0;
+        }
+
+        let centerIndex = Math.round(currentScroll / spacing);
+        centerIndex = Math.max(0, Math.min(centerIndex, items.length - 1));
+        
+        if (items[centerIndex]) {
+            const lbl = items[centerIndex].querySelector('.item-label');
+            if(lbl && centerLabel) {
+                centerLabel.textContent = lbl.textContent;
+                centerLabel.classList.add('active');
+            }
+        }
+        
+        items.forEach((item, index) => {
+            const distance = (index * spacing) - currentScroll;
+            const diffRatio = distance / spacing;
+            const x = distance;
+            
+            // Curved Visual Logic
+            const absRatio = Math.abs(diffRatio);
+            const rotateY = diffRatio * -25; // angle inwards
+            const translateZ = absRatio * -100; // side items recess
+            let scale = 1 - Math.min(0.3, absRatio * 0.2); 
+            const opacity = Math.max(0, 1 - absRatio * 0.5); 
+            const zIndex = 100 - Math.round(absRatio * 10);
+            
+            // Scale lift on hover
+            if (item.matches(':hover') && absRatio < 0.2) scale += 0.03;
+            
+            item.style.transform = `translateX(${x}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+            item.style.opacity = opacity;
+            item.style.zIndex = zIndex;
+            
+            const img = item.querySelector('img');
+            if (img) {
+                if (absRatio < 0.2) {
+                    img.style.filter = 'grayscale(0%) saturate(120%)';
+                } else {
+                    img.style.filter = 'grayscale(100%)';
+                }
+            }
+        });
+    }
+
     function animate() {
         if (!isDragging) {
-            velocity *= 0.95;
-            currentAngle += velocity;
-            targetAngle = currentAngle;
+            velocity *= 0.9;
+            currentScroll += (targetScroll - currentScroll) * 0.1;
         } else {
-            currentAngle = targetAngle;
+            currentScroll = targetScroll;
         }
+        
+        const spacing = getSpacing();
+        const items = track.querySelectorAll('.gallery-item-3d');
+        const maxScroll = (items.length - 1) * spacing;
+        
+        if(currentScroll < -spacing/2) currentScroll = targetScroll = -spacing/2;
         
         updateGallery();
         animationId = requestAnimationFrame(animate);
     }
     
     function snapToNearest() {
-        const nearestIndex = Math.round(currentAngle / angleStep);
-        targetAngle = nearestIndex * angleStep;
-        velocity = 0;
+        const spacing = getSpacing();
+        const items = track.querySelectorAll('.gallery-item-3d');
+        let nearestIndex = Math.round(targetScroll / spacing);
+        nearestIndex = Math.max(0, Math.min(nearestIndex, items.length - 1));
+        targetScroll = nearestIndex * spacing;
     }
-    
-    // Event listeners
+
     wrapper.addEventListener('mousedown', (e) => {
         isDragging = true;
+        autoplayPaused = true;
         lastX = e.clientX;
         wrapper.style.cursor = 'grabbing';
-        cancelAnimationFrame(animationId);
-    });
-    
-    wrapper.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        lastX = e.touches[0].clientX;
-        cancelAnimationFrame(animationId);
     });
     
     window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         const deltaX = e.clientX - lastX;
-        velocity = deltaX * 0.1;
-        targetAngle -= deltaX * 0.3;
+        targetScroll -= deltaX * 1.5;
         lastX = e.clientX;
     });
+    
+    window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        wrapper.style.cursor = 'grab';
+        snapToNearest();
+        autoplayPaused = false;
+        resetAutoplay();
+    });
+    
+    wrapper.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        autoplayPaused = true;
+        lastX = e.touches[0].clientX;
+    }, {passive: true});
     
     window.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         const deltaX = e.touches[0].clientX - lastX;
-        velocity = deltaX * 0.1;
-        targetAngle -= deltaX * 0.3;
+        targetScroll -= deltaX * 1.5;
         lastX = e.touches[0].clientX;
     });
     
-    window.addEventListener('mouseup', () => {
-        isDragging = false;
-        wrapper.style.cursor = 'grab';
-        snapToNearest();
-        animate();
-    });
-    
     window.addEventListener('touchend', () => {
+        if (!isDragging) return;
         isDragging = false;
         snapToNearest();
-        animate();
+        autoplayPaused = false;
+        resetAutoplay();
+    });
+
+    wrapper.addEventListener('mouseenter', () => autoplayPaused = true);
+    wrapper.addEventListener('mouseleave', () => {
+        if(!isDragging) autoplayPaused = false;
+        // force update to remove hover scales smoothly
+        targetScroll = currentScroll; 
     });
     
     wrapper.addEventListener('wheel', (e) => {
         e.preventDefault();
-        velocity = -e.deltaY * 0.1;
-        targetAngle -= e.deltaY * 0.3;
+        targetScroll += e.deltaY;
+        snapToNearest();
+        autoplayPaused = true;
+        clearTimeout(wrapper.wheelTimeout);
+        wrapper.wheelTimeout = setTimeout(() => {
+            autoplayPaused = false;
+            resetAutoplay();
+        }, 1000);
     }, { passive: false });
-    
-    prevBtn.addEventListener('click', () => {
-        targetAngle += angleStep;
-        velocity = 2;
+
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        targetScroll -= getSpacing();
+        snapToNearest();
     });
-    
-    nextBtn.addEventListener('click', () => {
-        targetAngle -= angleStep;
-        velocity = -2;
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        targetScroll += getSpacing();
+        snapToNearest();
     });
-    
-    // Hide hint on interaction
-    const hint = wrapper.querySelector('.gallery-drag-hint-3d');
-    wrapper.addEventListener('mousedown', () => { if(hint) hint.style.opacity = '0'; });
-    wrapper.addEventListener('touchstart', () => { if(hint) hint.style.opacity = '0'; });
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            targetAngle += angleStep;
-        } else if (e.key === 'ArrowRight') {
-            targetAngle -= angleStep;
-        }
-    });
-    
+
     wrapper.style.cursor = 'grab';
-    updateGallery();
+    startAutoplay();
     animate();
 }
+
