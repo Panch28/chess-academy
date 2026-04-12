@@ -12,7 +12,8 @@ const firebaseConfig = {
   appId: "1:1093972011225:web:577f1ab01c75b082b936c8"
 };
 
-// Admin password - change this to whatever you want
-const ADMIN_PASSWORD = "srisai@admin2026";
+// Local Dashboard credentials (instead of storing in code, consider fetching from a secure backend or database in production)
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "password123";
 
-export { firebaseConfig, ADMIN_PASSWORD };
+export { firebaseConfig, ADMIN_USERNAME, ADMIN_PASSWORD };

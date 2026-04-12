@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sri Sai Chess Academy | Building Smart Minds Through Chess</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <meta name="description" content="Sri Sai Chess Academy - Premium chess coaching for all levels. Expert trainers, proven methodology, and a passion for developing strategic minds in children.">
     <meta name="keywords" content="chess academy, chess coaching, chess classes, chess tournament, chess for kids">
     <meta property="og:title" content="Sri Sai Chess Academy">
@@ -17,13 +18,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <canvas id="chessKing3D" class="chess-king-canvas"></canvas>
 
     <div class="preloader" id="preloader">
         <div class="preloader-content">
             <div class="preloader-logo">
-                <i class="fa-solid fa-chess-knight"></i>
-            </div>
+                  <img src="logo.png" style="height: 64px; width: auto; animation: pulse 2s infinite;" alt="Loading Logo">
+              </div>
             <div class="preloader-text">Sri Sai Chess Academy</div>
             <div class="preloader-bar">
                 <div class="preloader-progress"></div>
@@ -32,19 +32,19 @@
     </div>
 
     <header class="navbar" id="navbar">
-        <div class="logo">
-            <i class="fa-solid fa-chess-knight"></i>
-            <span>Sri Sai Chess Academy</span>
-        </div>
+        <div class="logo" style="display: flex; align-items: center; gap: 14px;">
+              <img src="logo.png" alt="Sri Sai Chess Academy Logo">
+              <span style="font-family: 'Cinzel', serif; color: #FFFFFF; font-size: 19px; font-weight: 500; white-space: nowrap;">SRI SAI CHESS ACADEMY</span>
+          </div>
         <nav class="nav-menu" id="navMenu">
             <ul class="nav-links">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About Us</a></li>
-                <li><a href="#courses" class="nav-link">Courses</a></li>
-                <li><a href="#events" class="nav-link">Events</a></li>
                 <li><a href="#gallery" class="nav-link">Gallery</a></li>
                 <li><a href="#teachers" class="nav-link">Teachers</a></li>
                 <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                <li><a href="#courses" class="nav-link">Courses</a></li>
+                <li><a href="#events" class="nav-link">Events</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
 
@@ -61,60 +61,44 @@
     </a>
 
     <main>
-        <section id="home" class="hero">
-            <div class="hero-bg"></div>
-            <div class="hero-particles">
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-            </div>
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="fa-solid fa-star"></i> Now Enrolling for Summer Batch 2026
-                </div>
-                <div class="hero-tagline gsap-fade">Building Smart Minds Through Chess</div>
-                <h1 class="gsap-fade">
-                    <span class="typewriter" id="typewriter"></span>
-                </h1>
-                <p class="gsap-fade">Welcome to Sri Sai Chess Academy, where strategic brilliance meets passion. Elevate your game today with our expert coaching.</p>
-                
-                <div class="hero-trust-badges gsap-fade">
-                    <div class="trust-badge">
-                        <i class="fa-solid fa-users"></i>
-                        <span>500+ Students</span>
+                <section id="home" class="hero split-hero">
+            <div class="hero-left">
+                <div class="hero-content-inner">
+                    <div class="hero-badge-new">
+                        <i class="fa-solid fa-star"></i> Now Enrolling for Summer Batch 2026
                     </div>
-                    <div class="trust-badge">
-                        <i class="fa-solid fa-trophy"></i>
-                        <span>50+ Champions</span>
+                    
+                    <h1 class="hero-title-new">
+                        Building Smart Minds<br>
+                        Through Chess
+                        <span class="hero-title-underline"></span>
+                    </h1>
+                    
+                    <p class="hero-subheding-new">Welcome to Sri Sai Chess Academy, where strategic brilliance meets passion. Elevate your game today with our expert coaching.</p>
+                    
+                    <div class="hero-buttons-new">
+                        <a href="#courses" class="btn btn-primary-solid">Explore Courses</a>
+                        <a href="#contact" class="btn btn-secondary-outline">Register Now</a>
                     </div>
-                    <div class="trust-badge">
-                        <i class="fa-solid fa-star"></i>
-                        <span>4.9 Rating</span>
+                    
+                    <div class="hero-trust-new">
+                        <div class="trust-item">
+                            <i class="fa-solid fa-users"></i>
+                            <span>500+ Students</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fa-solid fa-trophy"></i>
+                            <span>50+ Champions</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.9 Rating</span>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="hero-buttons gsap-fade">
-                    <a href="#courses" class="btn btn-primary btn-glow">Explore Courses</a>
-                    <a href="#contact" class="btn btn-gold-outline">Register Now</a>
-                    <a href="#contact" class="btn btn-trial">Free Trial Class</a>
                 </div>
             </div>
-            
-            <div class="hero-testimonial">
-                <div class="testimonial-mini">
-                    <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <p>"Best chess academy for kids! My son's focus improved tremendously."</p>
-                    <span>- Parent of Student</span>
-                </div>
-            </div>
-            
-            <div class="scroll-indicator">
-                <div class="mouse">
-                    <div class="wheel"></div>
-                </div>
+            <div class="hero-right">
+                <img src="hero-student.jpg" alt="Student playing chess" class="hero-image-full">
             </div>
         </section>
         
@@ -169,18 +153,18 @@
 
             <div class="container about-diagonal-split">
                 <!-- Left Side: Huge Stats -->
-                <div class="about-huge-stats">
-                    <div class="huge-stat stagger-about">
-                        <span class="stat-number" data-count="500">0</span><span class="plus-sign">+</span>
-                        <span class="huge-stat-label">Students Trained</span>
+                <div class="about-huge-stats-v4">
+                    <div class="huge-stat-row-v4 stagger-about">
+                        <div class="stat-number-v4">500+</div>
+                        <div class="stat-label-v4">STUDENTS TRAINED</div>
                     </div>
-                    <div class="huge-stat stagger-about">
-                        <span class="stat-number" data-count="50">0</span><span class="plus-sign">+</span>
-                        <span class="huge-stat-label">Tournament Wins</span>
+                    <div class="huge-stat-row-v4 stagger-about">
+                        <div class="stat-number-v4">50+</div>
+                        <div class="stat-label-v4">TOURNAMENT WINS</div>
                     </div>
-                    <div class="huge-stat stagger-about">
-                        <span class="stat-number" data-count="15">0</span><span class="plus-sign">+</span>
-                        <span class="huge-stat-label">Expert Coaches</span>
+                    <div class="huge-stat-row-v4 stagger-about">
+                        <div class="stat-number-v4">15+</div>
+                        <div class="stat-label-v4">EXPERT COACHES</div>
                     </div>
                 </div>
 
@@ -222,8 +206,8 @@
                 <div class="container container-flex-center">
                     <div class="banner-icon"><i class="fa-solid fa-trophy"></i></div>
                     <div class="banner-text">
-                        <h4 class="serif-heading">Our Achievements</h4>
-                        <p>Over 500+ successful tournament victories by our students, multiple state championships won, and FIDE-rated players developed.</p>
+                        <h4 class="serif-heading" style="color: #FFFFFF !important;">Our Achievements</h4>
+                        <p style="color: #FFFFFF !important;">Over 500+ successful tournament victories by our students, multiple state championships won, and FIDE-rated players developed.</p>
                     </div>
                 </div>
             </div>
@@ -248,21 +232,182 @@
                             <h4>Proven Methodology</h4>
                             <p>Structured curriculum from basics to advanced tournament preparation.</p>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon"><i class="fa-solid fa-users"></i></div>
-                            <h4>Small Batch Sizes</h4>
-                            <p>Personalized attention with limited students per batch for better learning.</p>
+</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="section">
+            <div class="gallery-section-wrapper">
+                <div class="container">
+                    <div class="section-header text-center scroll-reveal">
+                        <span class="section-subtitle gold-text">Visuals</span>
+                        <h2 class="section-title text-white">Academy Gallery</h2>
+                        <p class="text-light">Drag or scroll to explore our moments</p>
+                    </div>
+                </div>
+                
+                <div class="circular-gallery-wrapper" id="circularGallery">
+                    <div class="circular-gallery-track" id="galleryTrack"></div>
+                    <div class="gallery-labels-center">
+                        <div class="gallery-center-label" id="centerLabel"></div>
+                    </div>
+                    <button class="gallery-nav-btn prev" id="galleryPrev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="gallery-nav-btn next" id="galleryNext"><i class="fa-solid fa-chevron-right"></i></button>
+                    
+                </div>
+            </div>
+        </section>
+
+        <section id="teachers" class="section">
+            <div class="container">
+                <div class="section-header text-center scroll-reveal">
+                    <span class="section-subtitle gold-text">Mentors</span>
+                    <h2 class="section-title">Our Teachers & Experts</h2>
+                </div>
+                
+                <div class="teachers-showcase">
+                    <div class="teacher-featured scroll-reveal">
+                        <div class="teacher-image">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80" alt="Head Chess Coach">
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon"><i class="fa-solid fa-laptop"></i></div>
-                            <h4>Online & Offline</h4>
-                            <p>Choose between in-person classes or online sessions from anywhere.</p>
+                        <div class="teacher-info">
+                            <span class="teacher-badge">Head Coach</span>
+                            <h3 class="gold-text">Grandmaster Harsha</h3>
+                            <p class="teacher-role">Chief Chess Instructor</p>
+                            <p class="bio text-light">Former National Champion with a profound ability to decode complex middle-game strategies into actionable lessons. Over 15 years of coaching experience producing multiple state and national level champions.</p>
+                            <div class="teacher-stats">
+                                <div class="stat">
+                                    <span class="stat-number stat-value" data-count="15">0</span>
+                                    <span class="stat-name">Years Teaching</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number stat-value" data-count="500">0</span>
+                                    <span class="stat-name">Students</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number stat-value" data-count="50">0</span>
+                                    <span class="stat-name">Champions</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon"><i class="fa-solid fa-medal"></i></div>
-                            <h4>Tournament Access</h4>
-                            <p>Regular tournament participation opportunities for all skill levels.</p>
+                    </div>
+                    
+                    <div class="teachers-grid">
+                        <div class="teacher-card scroll-reveal">
+                            <div class="teacher-image">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Activities Director">
+                            </div>
+                            <div class="teacher-info">
+                                <h4 class="gold-text">Akash V.</h4>
+                                <p class="role">Activities Director & Coach</p>
+                                <p class="bio text-light">Specializing in Beginner setups, Phonics, and managing our Summer Camp programs with creative engagement techniques.</p>
+                            </div>
                         </div>
+                        <div class="teacher-card scroll-reveal delay-1">
+                            <div class="teacher-image">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" alt="Junior Coach">
+                            </div>
+                            <div class="teacher-info">
+                                <h4 class="gold-text">Priya S.</h4>
+                                <p class="role">Junior Chess Coach</p>
+                                <p class="bio text-light">Expert in working with young beginners, making chess fun and accessible for children aged 5-8 years.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="section bg-dark">
+            <div class="container">
+                <div class="section-header text-center scroll-reveal">
+                    <span class="section-subtitle gold-text">Testimonials</span>
+                    <h2 class="section-title text-white">What Parents Say</h2>
+                </div>
+                
+                <div class="testimonial-carousel" id="testimonialCarousel">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="testimonial-card carousel-slide active">
+                            <div class="testimonial-badge bg-gold text-black">Parent</div>
+                            <div class="stars gold-text">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-light">"My 8-year-old son literally can't wait for his Saturday class. They've made learning chess fun and taught him so much patience. The summer camp was phenomenal!"</p>
+                            <div class="testimonial-author">
+                                <div class="avatar bg-white text-black">R</div>
+                                <div>
+                                    <h5 class="text-white">Rohan K.</h5>
+                                    <span class="gold-text">Parent of Arjun, Age 8</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card carousel-slide">
+                            <div class="testimonial-badge bg-gold text-black">Success Story</div>
+                            <div class="stars gold-text">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-light">"Started at Beginner Level and moved to Expert in two years. With Grandmaster mentorship, I recently won my first state championship. Life changing!"</p>
+                            <div class="testimonial-author">
+                                <div class="avatar bg-gold text-black">A</div>
+                                <div>
+                                    <h5 class="text-white">Aditi S.</h5>
+                                    <span class="gold-text">Student, Expert Level</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card carousel-slide">
+                            <div class="testimonial-badge bg-gold text-black">Parent</div>
+                            <div class="stars gold-text">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-light">"The transformation in my daughter's problem-solving abilities has been remarkable since joining. Chess has improved her concentration in all subjects."</p>
+                            <div class="testimonial-author">
+                                <div class="avatar bg-white text-black">M</div>
+                                <div>
+                                    <h5 class="text-white">Meera P.</h5>
+                                    <span class="gold-text">Parent of Sia, Age 10</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card carousel-slide">
+                            <div class="testimonial-badge bg-gold text-black">Parent</div>
+                            <div class="stars gold-text">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-light">"Best decision we made for our son. The coaches are patient, the environment is nurturing, and the progress reports keep us informed every month."</p>
+                            <div class="testimonial-author">
+                                <div class="avatar bg-white text-black">V</div>
+                                <div>
+                                    <h5 class="text-white">Vikram R.</h5>
+                                    <span class="gold-text">Parent of Rohit, Age 12</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card carousel-slide">
+                            <div class="testimonial-badge bg-gold text-black">Success Story</div>
+                            <div class="stars gold-text">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-light">"At 6 years old, I never thought my child could learn chess so well. The beginner program is perfectly designed for young minds. Highly recommended!"</p>
+                            <div class="testimonial-author">
+                                <div class="avatar bg-gold text-black">S</div>
+                                <div>
+                                    <h5 class="text-white">Sunita M.</h5>
+                                    <span class="gold-text">Parent of Kiran, Age 6</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-controls">
+                        <button class="carousel-btn prev" id="carouselPrev"><i class="fa-solid fa-chevron-left"></i></button>
+                        <div class="carousel-dots" id="carouselDots"></div>
+                        <button class="carousel-btn next" id="carouselNext"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -314,7 +459,7 @@
                         
                         <div class="course-card scroll-reveal delay-2">
                             <div class="course-icon gold-text"><i class="fa-solid fa-chess-king"></i></div>
-                            <h3 class="text-white">Expert Level</h3>
+                            <h3 class="text-white">Advanced Level</h3>
                             <p class="text-light">Advanced opening theory, complex positional understanding, calculation, and tournament prep.</p>
                             <div class="course-meta">
                                 <span><i class="fa-solid fa-user gold-text"></i> Age: 10+ years</span>
@@ -330,38 +475,7 @@
                     </div>
                 </div>
 
-                <div class="activities-section">
-                    <h3 class="subsection-title text-center text-white mt-5 mb-5"><i class="fa-solid fa-palette gold-icon"></i> Other Academy Activities</h3>
-                    <div class="activities-grid">
-                        <div class="activity-card scroll-reveal">
-                            <div class="activity-icon"><i class="fa-solid fa-pen-fancy"></i></div>
-                            <h4>Drawing</h4>
-                            <p>Creative expression through art classes for young minds.</p>
-                        </div>
-                        <div class="activity-card scroll-reveal delay-1">
-                            <div class="activity-icon"><i class="fa-solid fa-pen-nib"></i></div>
-                            <h4>Handwriting</h4>
-                            <p>Improve penmanship with expert guidance and practice.</p>
-                        </div>
-                        <div class="activity-card scroll-reveal delay-2">
-                            <div class="activity-icon"><i class="fa-solid fa-book-open"></i></div>
-                            <h4>Phonics</h4>
-                            <p>Strong foundation in reading and pronunciation skills.</p>
-                        </div>
-                        <div class="activity-card scroll-reveal">
-                            <div class="activity-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-                            <h4>Academic Tuitions</h4>
-                            <p>Subject-wise tuitions for better academic performance.</p>
-                        </div>
-                        <div class="activity-card scroll-reveal delay-1">
-                            <div class="activity-icon"><i class="fa-solid fa-campground"></i></div>
-                            <h4>Summer Camp</h4>
-                            <p>Exciting summer programs combining learning and fun.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                </section>
 
         <section id="events" class="section">
             <div class="container">
@@ -509,184 +623,6 @@
             </div>
         </section>
 
-        <section id="gallery" class="section">
-            <div class="gallery-section-wrapper">
-                <div class="container">
-                    <div class="section-header text-center scroll-reveal">
-                        <span class="section-subtitle gold-text">Visuals</span>
-                        <h2 class="section-title text-white">Academy Gallery</h2>
-                        <p class="text-light">Drag or scroll to explore our moments</p>
-                    </div>
-                </div>
-                
-                <div class="circular-gallery-wrapper" id="circularGallery">
-                    <div class="circular-gallery-track" id="galleryTrack"></div>
-                    <div class="gallery-labels-center">
-                        <div class="gallery-center-label" id="centerLabel"></div>
-                    </div>
-                    <button class="gallery-nav-btn prev" id="galleryPrev"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="gallery-nav-btn next" id="galleryNext"><i class="fa-solid fa-chevron-right"></i></button>
-                    <div class="gallery-drag-hint-3d">
-                        <i class="fa-solid fa-hand-pointer"></i> Drag to Explore
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="teachers" class="section">
-            <div class="container">
-                <div class="section-header text-center scroll-reveal">
-                    <span class="section-subtitle gold-text">Mentors</span>
-                    <h2 class="section-title">Our Teachers & Experts</h2>
-                </div>
-                
-                <div class="teachers-showcase">
-                    <div class="teacher-featured scroll-reveal">
-                        <div class="teacher-image">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80" alt="Head Chess Coach">
-                        </div>
-                        <div class="teacher-info">
-                            <span class="teacher-badge">Head Coach</span>
-                            <h3 class="gold-text">Grandmaster Harsha</h3>
-                            <p class="teacher-role">Chief Chess Instructor</p>
-                            <p class="bio text-light">Former National Champion with a profound ability to decode complex middle-game strategies into actionable lessons. Over 15 years of coaching experience producing multiple state and national level champions.</p>
-                            <div class="teacher-stats">
-                                <div class="stat">
-                                    <span class="stat-value">15+</span>
-                                    <span class="stat-name">Years Teaching</span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-value">500+</span>
-                                    <span class="stat-name">Students</span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-value">50+</span>
-                                    <span class="stat-name">Champions</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="teachers-grid">
-                        <div class="teacher-card scroll-reveal">
-                            <div class="teacher-image">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Activities Director">
-                            </div>
-                            <div class="teacher-info">
-                                <h4 class="gold-text">Akash V.</h4>
-                                <p class="role">Activities Director & Coach</p>
-                                <p class="bio text-light">Specializing in Beginner setups, Phonics, and managing our Summer Camp programs with creative engagement techniques.</p>
-                            </div>
-                        </div>
-                        <div class="teacher-card scroll-reveal delay-1">
-                            <div class="teacher-image">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" alt="Junior Coach">
-                            </div>
-                            <div class="teacher-info">
-                                <h4 class="gold-text">Priya S.</h4>
-                                <p class="role">Junior Chess Coach</p>
-                                <p class="bio text-light">Expert in working with young beginners, making chess fun and accessible for children aged 5-8 years.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="testimonials" class="section bg-dark">
-            <div class="container">
-                <div class="section-header text-center scroll-reveal">
-                    <span class="section-subtitle gold-text">Testimonials</span>
-                    <h2 class="section-title text-white">What Parents Say</h2>
-                </div>
-                
-                <div class="testimonial-carousel" id="testimonialCarousel">
-                    <div class="carousel-track" id="carouselTrack">
-                        <div class="testimonial-card carousel-slide active">
-                            <div class="testimonial-badge bg-gold text-black">Parent</div>
-                            <div class="stars gold-text">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                            </div>
-                            <p class="text-light">"My 8-year-old son literally can't wait for his Saturday class. They've made learning chess fun and taught him so much patience. The summer camp was phenomenal!"</p>
-                            <div class="testimonial-author">
-                                <div class="avatar bg-white text-black">R</div>
-                                <div>
-                                    <h5 class="text-white">Rohan K.</h5>
-                                    <span class="gold-text">Parent of Arjun, Age 8</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card carousel-slide">
-                            <div class="testimonial-badge bg-gold text-black">Success Story</div>
-                            <div class="stars gold-text">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                            </div>
-                            <p class="text-light">"Started at Beginner Level and moved to Expert in two years. With Grandmaster mentorship, I recently won my first state championship. Life changing!"</p>
-                            <div class="testimonial-author">
-                                <div class="avatar bg-gold text-black">A</div>
-                                <div>
-                                    <h5 class="text-white">Aditi S.</h5>
-                                    <span class="gold-text">Student, Expert Level</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card carousel-slide">
-                            <div class="testimonial-badge bg-gold text-black">Parent</div>
-                            <div class="stars gold-text">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                            </div>
-                            <p class="text-light">"The transformation in my daughter's problem-solving abilities has been remarkable since joining. Chess has improved her concentration in all subjects."</p>
-                            <div class="testimonial-author">
-                                <div class="avatar bg-white text-black">M</div>
-                                <div>
-                                    <h5 class="text-white">Meera P.</h5>
-                                    <span class="gold-text">Parent of Sia, Age 10</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card carousel-slide">
-                            <div class="testimonial-badge bg-gold text-black">Parent</div>
-                            <div class="stars gold-text">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                            </div>
-                            <p class="text-light">"Best decision we made for our son. The coaches are patient, the environment is nurturing, and the progress reports keep us informed every month."</p>
-                            <div class="testimonial-author">
-                                <div class="avatar bg-white text-black">V</div>
-                                <div>
-                                    <h5 class="text-white">Vikram R.</h5>
-                                    <span class="gold-text">Parent of Rohit, Age 12</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card carousel-slide">
-                            <div class="testimonial-badge bg-gold text-black">Success Story</div>
-                            <div class="stars gold-text">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                            </div>
-                            <p class="text-light">"At 6 years old, I never thought my child could learn chess so well. The beginner program is perfectly designed for young minds. Highly recommended!"</p>
-                            <div class="testimonial-author">
-                                <div class="avatar bg-gold text-black">S</div>
-                                <div>
-                                    <h5 class="text-white">Sunita M.</h5>
-                                    <span class="gold-text">Parent of Kiran, Age 6</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="carousel-controls">
-                        <button class="carousel-btn prev" id="carouselPrev"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div class="carousel-dots" id="carouselDots"></div>
-                        <button class="carousel-btn next" id="carouselNext"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="contact" class="section">
             <div class="container">
                 <div class="section-header text-center scroll-reveal">
@@ -733,56 +669,25 @@
                         </div>
                     </div>
                     
-                    <form class="contact-form scroll-reveal delay-1" id="contactForm">
-                        <h3 class="text-white mb-4">Registration Form</h3>
+                    
+                    <div class="contact-cta-section scroll-reveal delay-1">
+                        <h3 class="text-white mb-4">Get in Touch</h3>
+                        <p class="text-light mb-4">Interested in enrolling or have questions? Reach out to us directly through WhatsApp or give us a call!</p>
                         
-                        <div class="form-row">
-                            <div class="form-group floating-label">
-                                <input type="text" id="studentName" placeholder=" " required>
-                                <label for="studentName">Student Name *</label>
-                            </div>
-                            <div class="form-group floating-label">
-                                <input type="number" id="studentAge" placeholder=" " min="3" max="18" required>
-                                <label for="studentAge">Student Age *</label>
-                            </div>
-                        </div>
+                        <a href="https://wa.me/919876543210?text=Hi,%20I'm%20interested%20in%20enrolling%20at%20Sri%20Sai%20Chess%20Academy" 
+                           target="_blank" class="btn btn-primary w-100 mb-3" style="background-color: #c85a1a; border-color: #c85a1a; border-radius: 8px;">
+                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Us
+                        </a>
+                        
+                        <a href="tel:+919876543210" class="btn btn-outline-gold w-100 mb-3" style="border-radius: 8px; color: #ffffff; border-color: #ffffff;">
+                            <i class="fa-solid fa-phone"></i> Call Now
+                        </a>
+                        
+                        <a href="mailto:info@srisaichess.com" class="btn btn-outline-gold w-100" style="border-radius: 8px; color: #ffffff; border-color: #ffffff;">
+                            <i class="fa-solid fa-envelope"></i> Email Us
+                        </a>
+                    </div>
 
-                        <div class="form-row">
-                            <div class="form-group floating-label">
-                                <input type="text" id="parentName" placeholder=" " required>
-                                <label for="parentName">Parent's Name *</label>
-                            </div>
-                            <div class="form-group floating-label">
-                                <input type="tel" id="phoneNumber" placeholder=" " required>
-                                <label for="phoneNumber">Phone Number *</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group floating-label">
-                            <select id="courseSelect" required>
-                                <option value="" disabled selected></option>
-                                <option value="beg">Chess - Beginner Level</option>
-                                <option value="int">Chess - Intermediate Level</option>
-                                <option value="exp">Chess - Expert Level</option>
-                                <option value="draw">Activity - Drawing</option>
-                                <option value="hand">Activity - Handwriting</option>
-                                <option value="phonics">Activity - Phonics</option>
-                                <option value="academic">Academic Tuitions</option>
-                                <option value="camp">Summer Camp</option>
-                            </select>
-                            <label for="courseSelect">Course / Activity Selection *</label>
-                        </div>
-                        
-                        <div class="form-group floating-label">
-                            <textarea id="message" placeholder=" " rows="3"></textarea>
-                            <label for="message">Additional Message</label>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100">
-                            <span>Submit Registration</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </form>
                 </div>
             </div>
         </section>
@@ -792,8 +697,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <div class="footer-logo">
-                        <i class="fa-solid fa-chess-knight"></i>
+                    <div class="footer-logo" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="logo.png" style="height: 48px; width: auto;" alt="Footer Logo">
                         <span>Sri Sai Chess Academy</span>
                     </div>
                     <p class="text-light">Building Smart Minds Through Chess</p>

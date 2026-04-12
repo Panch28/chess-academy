@@ -41,14 +41,14 @@
     border-radius: 16px;
     overflow: hidden;
     position: relative;
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(232, 93, 4, 0.2);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 box-shadow 0.4s ease,
                 border-color 0.4s ease,
                 filter 0.4s ease;
     cursor: pointer;
-    background: #161b22;
+    background: #FFFFFF;
 }
 
 .gallery-item-3d img {
@@ -63,8 +63,8 @@
 /* Center/active card */
 .gallery-item-3d.is-active {
     transform: scale(1.08);
-    border-color: rgba(212, 175, 55, 0.7);
-    box-shadow: 0 30px 80px rgba(212, 175, 55, 0.25), 0 0 0 1px rgba(212, 175, 55, 0.3);
+    border-color: rgba(232, 93, 4, 0.7);
+    box-shadow: 0 30px 80px rgba(232, 93, 4, 0.25), 0 0 0 1px rgba(232, 93, 4, 0.3);
     z-index: 10;
 }
 
@@ -109,7 +109,7 @@
 .gallery-item-3d .item-label {
     font-family: 'Cinzel', serif;
     font-size: 0.85rem;
-    color: #d4af37;
+    color: #E85D04;
     text-transform: uppercase;
     letter-spacing: 3px;
 }
@@ -129,10 +129,10 @@
     font-family: 'Cinzel', serif;
     font-size: 1.4rem;
     font-weight: 700;
-    color: #d4af37;
+    color: #E85D04;
     text-transform: uppercase;
     letter-spacing: 6px;
-    text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    text-shadow: 0 0 30px rgba(232, 93, 4, 0.5);
     white-space: nowrap;
     min-height: 28px;
 }
@@ -143,17 +143,17 @@
     bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(212, 175, 55, 0.08);
+    background: rgba(232, 93, 4, 0.08);
     backdrop-filter: blur(10px);
     padding: 10px 22px;
     border-radius: 30px;
-    color: #d4af37;
+    color: #E85D04;
     font-size: 0.75rem;
     display: flex;
     align-items: center;
     gap: 8px;
     z-index: 20;
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(232, 93, 4, 0.2);
     animation: hint-float 3s ease-in-out infinite;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -173,10 +173,10 @@
     transform: translateY(-50%);
     width: 48px;
     height: 48px;
-    background: rgba(212, 175, 55, 0.12);
-    border: 1px solid rgba(212, 175, 55, 0.35);
+    background: rgba(232, 93, 4, 0.12);
+    border: 1px solid rgba(232, 93, 4, 0.35);
     border-radius: 50%;
-    color: #d4af37;
+    color: #E85D04;
     font-size: 1rem;
     cursor: pointer;
     z-index: 20;
@@ -188,8 +188,8 @@
 }
 
 .gallery-nav-btn:hover {
-    background: #d4af37;
-    color: #0a0a0f;
+    background: #E85D04;
+    color: #FFFFFF;
     transform: translateY(-50%) scale(1.1);
 }
 

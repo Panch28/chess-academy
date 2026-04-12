@@ -178,11 +178,7 @@ export default class CircularGallery {
         }, { passive: true });
         canvas.addEventListener('touchend', () => { this.isDragging = false; });
 
-        // Wheel
-        canvas.addEventListener('wheel', e => {
-            e.preventDefault();
-            this.targetScroll += e.deltaY * 0.001 * this.scrollSpeed;
-        }, { passive: false });
+        
 
         // Resize debounced
         let resizeTimer;

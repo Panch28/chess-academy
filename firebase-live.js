@@ -146,39 +146,33 @@ async function loadGallery() {
   try {
     const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
     const snap = await getDocs(q);
-    if (snap.empty) return; // keep Unsplash fallbacks
+    if (snap.empty) return;
 
-    const items = [];
-    snap.forEach(d => items.push(d.data()));
-
-    // The 3D gallery in init3DGallery() builds from a local array.
-    // We override that array and re-call the function.
-    // Since init3DGallery is a named global function, we call it with our data.
     const track = document.getElementById('galleryTrack');
     if (!track) return;
-
-    // Clear existing items
     track.innerHTML = '';
 
-    const angleStep = 360 / items.length;
-    const radius = 350;
-
-    items.forEach((item, index) => {
-      const galleryItem = document.createElement('div');
-      galleryItem.className = 'gallery-item-3d';
-      galleryItem.innerHTML = `
-        <img src="${item.url}" alt="${item.label}" loading="lazy">
-        <div class="item-overlay">
-          <div class="item-label">${item.label}</div>
-        </div>`;
-      galleryItem.dataset.index = index;
-      track.appendChild(galleryItem);
+    const items = [];
+    snap.forEach(d => {
+        const item = d.data();
+        items.push(item);
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item-3d';
+        galleryItem.innerHTML = `
+          <img src="${item.url}" alt="${item.label}" loading="lazy">
+          <div class="item-overlay">
+            <div class="item-label">${item.label}</div>
+          </div>`;
+        track.appendChild(galleryItem);
     });
 
-    // Trigger position update — the existing animation loop
-    // reads from the DOM, so just dispatching a custom event
-    window.dispatchEvent(new CustomEvent('galleryReloaded', { detail: { count: items.length } }));
-
+    // Clean up old gallery artifacts and re-initialize
+    if (window.init3DGallery) {
+        window.init3DGallery(); // assuming this re-parses from DOM!
+    } else {
+        // Fallback simple fetch update if there's an array somewhere
+        if (window.galleryItemsArray) window.galleryItemsArray = items;
+    }
   } catch (e) {
     console.warn('[Firebase] Gallery load failed:', e.message);
   }

@@ -1,18 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     const preloader = document.getElementById('preloader');
-    const navbar = document.getElementById('navbar');
+      const navbar = document.getElementById('navbar');
     const mobileToggle = document.getElementById('mobileToggle');
     const navMenu = document.getElementById('navMenu');
     
     gsap.registerPlugin(ScrollTrigger);
     
     setTimeout(() => {
-        preloader.classList.add('hidden');
-        initHeroAnimations();
-        initTypewriter();
-        initCountdown();
-    }, 2200);
+          if (preloader) preloader.classList.add('hidden');
+          initHeroAnimations();
+          initTypewriter();
+          initCountdown();
+      }, 2200);
+    
     
     window.addEventListener('scroll', () => {
         if (window.scrollY > 80) {
@@ -229,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const updateCounter = () => {
             current += step;
             if (current < target) {
-                element.textContent = Math.floor(current) + '+';
+                element.textContent = Math.floor(current);
                 requestAnimationFrame(updateCounter);
             } else {
                 element.textContent = target + '+';
@@ -533,7 +534,24 @@ document.addEventListener('DOMContentLoaded', () => {
             mouseY = (e.clientY / window.innerHeight - 0.5) * 0.2;
         });
         
-        window.addEventListener('resize', () => {
+        
+    const prBtn = document.getElementById('galleryPrev');
+    const nxBtn = document.getElementById('galleryNext');
+    if (prBtn && nxBtn) {
+        prBtn.addEventListener('click', () => {
+            if(typeof targetScroll !== 'undefined') targetScroll -= getSpacing();
+            if(typeof resetAutoplay === 'function') resetAutoplay();
+        });
+        nxBtn.addEventListener('click', () => {
+            if(typeof targetScroll !== 'undefined') targetScroll += getSpacing();
+            if(typeof resetAutoplay === 'function') resetAutoplay();
+        });
+    }
+    
+    // Export init3DGallery globally if it is inside DOMContentLoaded
+    window.init3DGallery = init3DGallery;
+
+    window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -628,30 +646,13 @@ function init3DGallery() {
     const nextBtn = document.getElementById('galleryNext');
     if (!wrapper || !track) return;
     
-    const galleryItems = [
-        { image: 'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800&q=80', text: 'Tournament' },
-        { image: 'https://images.unsplash.com/photo-1586165368502-1bad197a6461?w=800&q=80', text: 'Chess Class' },
-        { image: 'https://images.unsplash.com/photo-1604948501466-4e9c339b9c24?w=800&q=80', text: 'Practice' },
-        { image: 'https://images.unsplash.com/photo-1523875194681-bedd468c58bf?w=800&q=80', text: 'Competition' },
-        { image: 'https://images.unsplash.com/photo-1538221566857-f20f4a8e904a?w=800&q=80', text: 'Workshop' },
-        { image: 'https://images.unsplash.com/photo-1580541832626-2a7131ee809f?w=800&q=80', text: 'Champions' },
-        { image: 'https://images.unsplash.com/photo-1593817771933-e2c3c9e9a6c5?w=800&q=80', text: 'Training' },
-        { image: 'https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?w=800&q=80', text: 'Victory' }
-    ];
-    
-    // Create initial fallback gallery items
-    galleryItems.forEach((item, index) => {
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item-3d';
-        galleryItem.innerHTML = `
-            <img src="${item.image}" alt="${item.text}" loading="lazy">
-            <div class="item-overlay">
-                <div class="item-label">${item.text}</div>
-            </div>
-        `;
-        galleryItem.dataset.index = index;
-        track.appendChild(galleryItem);
-    });
+    // Only bind events and loops ONCE
+    if (window._galleryInitialized) {
+        // Just force an update
+        if (window._updateGallery) window._updateGallery();
+        return;
+    }
+    window._galleryInitialized = true;
 
     let currentScroll = 0;
     let targetScroll = 0;
@@ -668,25 +669,18 @@ function init3DGallery() {
             if(!autoplayPaused) {
                 targetScroll += getSpacing();
             }
-        }, 4000); // Auto advances every 4 seconds
+        }, 4000);
     }
-    
-    function resetAutoplay() {
-        startAutoplay();
-    }
-    
-    function getSpacing() {
-        return window.innerWidth <= 768 ? window.innerWidth * 0.75 + 15 : 400 + 40; // width + gap
-    }
+    function resetAutoplay() { startAutoplay(); }
+    function getSpacing() { return window.innerWidth <= 768 ? window.innerWidth * 0.75 + 15 : 440; }
 
-    function updateGallery() {
+    window._updateGallery = function updateGallery() {
         const items = track.querySelectorAll('.gallery-item-3d');
         if (items.length === 0) return;
         
         const spacing = getSpacing();
         const maxScroll = (items.length - 1) * spacing;
         
-        // Auto-wrap scroll for seamless loop if it gets too far, or just constrain it
         if(currentScroll > maxScroll + spacing) {
             currentScroll = 0;
             targetScroll = 0;
@@ -708,15 +702,13 @@ function init3DGallery() {
             const diffRatio = distance / spacing;
             const x = distance;
             
-            // Curved Visual Logic
             const absRatio = Math.abs(diffRatio);
-            const rotateY = diffRatio * -25; // angle inwards
-            const translateZ = absRatio * -100; // side items recess
+            const rotateY = diffRatio * -25;
+            const translateZ = absRatio * -100;
             let scale = 1 - Math.min(0.3, absRatio * 0.2); 
             const opacity = Math.max(0, 1 - absRatio * 0.5); 
             const zIndex = 100 - Math.round(absRatio * 10);
             
-            // Scale lift on hover
             if (item.matches(':hover') && absRatio < 0.2) scale += 0.03;
             
             item.style.transform = `translateX(${x}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
@@ -725,11 +717,8 @@ function init3DGallery() {
             
             const img = item.querySelector('img');
             if (img) {
-                if (absRatio < 0.2) {
-                    img.style.filter = 'grayscale(0%) saturate(120%)';
-                } else {
-                    img.style.filter = 'grayscale(100%)';
-                }
+                if (absRatio < 0.2) img.style.filter = 'grayscale(0%) saturate(120%)';
+                else img.style.filter = 'grayscale(100%)';
             }
         });
     }
@@ -744,11 +733,10 @@ function init3DGallery() {
         
         const spacing = getSpacing();
         const items = track.querySelectorAll('.gallery-item-3d');
-        const maxScroll = (items.length - 1) * spacing;
-        
+        const maxScroll = Math.max(0, (items.length - 1) * spacing);
         if(currentScroll < -spacing/2) currentScroll = targetScroll = -spacing/2;
         
-        updateGallery();
+        window._updateGallery();
         animationId = requestAnimationFrame(animate);
     }
     
@@ -761,79 +749,47 @@ function init3DGallery() {
     }
 
     wrapper.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        autoplayPaused = true;
-        lastX = e.clientX;
-        wrapper.style.cursor = 'grabbing';
+        isDragging = true; autoplayPaused = true;
+        lastX = e.clientX; wrapper.style.cursor = 'grabbing';
     });
-    
     window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-        const deltaX = e.clientX - lastX;
-        targetScroll -= deltaX * 1.5;
+        targetScroll -= (e.clientX - lastX) * 1.5;
         lastX = e.clientX;
     });
-    
     window.addEventListener('mouseup', () => {
         if (!isDragging) return;
-        isDragging = false;
-        wrapper.style.cursor = 'grab';
-        snapToNearest();
-        autoplayPaused = false;
-        resetAutoplay();
+        isDragging = false; wrapper.style.cursor = 'grab';
+        snapToNearest(); autoplayPaused = false; resetAutoplay();
     });
     
     wrapper.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        autoplayPaused = true;
-        lastX = e.touches[0].clientX;
+        isDragging = true; autoplayPaused = true; lastX = e.touches[0].clientX;
     }, {passive: true});
-    
     window.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
-        const deltaX = e.touches[0].clientX - lastX;
-        targetScroll -= deltaX * 1.5;
+        targetScroll -= (e.touches[0].clientX - lastX) * 1.5;
         lastX = e.touches[0].clientX;
     });
-    
     window.addEventListener('touchend', () => {
         if (!isDragging) return;
-        isDragging = false;
-        snapToNearest();
-        autoplayPaused = false;
-        resetAutoplay();
+        isDragging = false; snapToNearest(); autoplayPaused = false; resetAutoplay();
     });
 
     wrapper.addEventListener('mouseenter', () => autoplayPaused = true);
     wrapper.addEventListener('mouseleave', () => {
         if(!isDragging) autoplayPaused = false;
-        // force update to remove hover scales smoothly
         targetScroll = currentScroll; 
     });
-    
-    wrapper.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        targetScroll += e.deltaY;
-        snapToNearest();
-        autoplayPaused = true;
-        clearTimeout(wrapper.wheelTimeout);
-        wrapper.wheelTimeout = setTimeout(() => {
-            autoplayPaused = false;
-            resetAutoplay();
-        }, 1000);
-    }, { passive: false });
 
-    if (prevBtn) prevBtn.addEventListener('click', () => {
-        targetScroll -= getSpacing();
-        snapToNearest();
-    });
-    if (nextBtn) nextBtn.addEventListener('click', () => {
-        targetScroll += getSpacing();
-        snapToNearest();
-    });
+    if (prevBtn) prevBtn.addEventListener('click', () => { targetScroll -= getSpacing(); snapToNearest(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { targetScroll += getSpacing(); snapToNearest(); });
 
     wrapper.style.cursor = 'grab';
     startAutoplay();
     animate();
 }
+
+window.init3DGallery = init3DGallery;
+
 
