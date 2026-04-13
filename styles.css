@@ -2804,6 +2804,8 @@ h1, h2, h3, h4, h5, h6 { color: #1B2F5E; }
     width: 100%;
     align-items: stretch;
     background: #1B2F5E;
+    margin-top: 80px; /* Increased gap to ensure visible separation from navbar buttons */
+    box-shadow: 0 -20px 40px rgba(0,0,0,0.1); 
 }
 
 .hero-left {
@@ -2840,18 +2842,19 @@ h1, h2, h3, h4, h5, h6 { color: #1B2F5E; }
 .hero-badge-new {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     background: #E85D04;
-    color: #FFFFFF;
-    padding: 8px 20px;
+    color: #000000 !important; /* Forced black for maximum contrast */
+    padding: 12px 28px;
     border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 1.1rem; /* Slightly larger for easier reading */
+    font-weight: 800; /* Extra bold */
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 30px;
+    letter-spacing: 2px;
+    margin-bottom: 35px;
+    box-shadow: 0 0 20px rgba(232, 93, 4, 0.6); /* Stronger glow to make it stand out */
 }
-.hero-badge-new i { color: #FFFFFF !important; }
+.hero-badge-new i { color: #000000 !important; }
 
 .hero-title-new {
     font-family: 'Cinzel', serif;
