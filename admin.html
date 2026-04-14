@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Sri Sai Chess Academy</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #E85D04;
+      --gold-light: #FFCC99;
+      --dark: #FFFFFF;
+      --dark2: #F0F0F0;
+      --dark3: #FFFFFF;
+      --dark4: #F5F5F5;
+      --border: #3A5FCD;
+      --text: #1B2F5E;
+      --text-muted: #3A5FCD;
+      --red: #e74c3c;
+      --green: #2ecc71;
+      --blue: #3498db;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      position: fixed; inset: 0;
+      background: var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    #loginScreen .logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      color: #E85D04;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    #loginScreen .card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 3rem;
+      width: 100%; max-width: 380px;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    #loginScreen h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      text-align: center;
+      font-weight: 600;
+    }
+    #loginError {
+      color: var(--red);
+      font-size: .82rem;
+      text-align: center;
+      display: none;
+    }
+
+    /* ── INPUTS ── */
+    input, textarea, select {
+      width: 100%;
+      background: var(--dark4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      font-size: .9rem;
+      padding: .75rem 1rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #E85D04; }
+    textarea { resize: vertical; min-height: 80px; }
+    input[type="file"] { padding: .5rem; cursor: pointer; }
+    input[type="date"] { color-scheme: dark; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .65rem 1.4rem;
+      border: none; border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .88rem; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-gold { background: var(--gold); color: #000; }
+    .btn-gold:hover { background: var(--gold-light); }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-red:hover { background: #c0392b; }
+    .btn-dark { background: var(--dark4); color: var(--text); border: 1px solid var(--border); }
+    .btn-dark:hover { border-color: #E85D04; color: #E85D04; }
+    .btn-green { background: var(--green); color: #000; }
+    .btn-green:hover { background: #27ae60; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-sm { padding: .4rem .85rem; font-size: .8rem; }
+
+    /* ── LAYOUT ── */
+    #app { display: none; min-height: 100vh; }
+
+    .topbar {
+      background: var(--dark2);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-logo {
+      font-family: 'Cinzel', serif;
+      color: #E85D04;
+      font-size: 1.1rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .topbar-right span { font-size: .82rem; color: var(--text-muted); }
+
+    .layout { display: flex; min-height: calc(100vh - 61px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 220px; flex-shrink: 0;
+      background: var(--dark2);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      display: flex; flex-direction: column; gap: .2rem;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .85rem 1.5rem;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      color: var(--text-muted);
+      font-size: .88rem; font-weight: 500;
+      transition: all .2s;
+    }
+    .sidebar-item:hover { color: var(--text); background: var(--dark3); }
+    .sidebar-item.active { color: #E85D04; border-left-color: #E85D04; background: var(--dark3); }
+    .sidebar-item i { width: 16px; text-align: center; }
+
+    /* ── MAIN CONTENT ── */
+    .main { flex: 1; padding: 2rem; overflow-y: auto; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: #E85D04;
+      margin-bottom: 1.8rem;
+      display: flex; align-items: center; gap: .6rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h3 {
+      font-family: 'Cinzel', serif;
+      font-size: .95rem;
+      color: #E85D04;
+      margin-bottom: 1.2rem;
+    }
+
+    .form-grid { display: grid; gap: 1rem; }
+    .form-grid-2 { grid-template-columns: 1fr 1fr; }
+    .form-actions { display: flex; gap: .8rem; margin-top: 1rem; flex-wrap: wrap; }
+
+    /* ── LIST ITEMS ── */
+    .list-container { display: flex; flex-direction: column; gap: .8rem; }
+
+    .list-item {
+      background: var(--dark4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .list-item-img {
+      width: 70px; height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    .list-item-body { flex: 1; min-width: 0; }
+    .list-item-title {
+      font-weight: 600; font-size: .92rem;
+      margin-bottom: .2rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .list-item-sub { font-size: .8rem; color: var(--text-muted); margin-bottom: .5rem; }
+    .list-item-text { font-size: .84rem; color: var(--text); line-height: 1.5; }
+    .list-item-actions { display: flex; gap: .5rem; flex-shrink: 0; align-items: flex-start; }
+
+    .badge {
+      display: inline-block;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+      font-size: .72rem; font-weight: 600;
+      background: rgba(232, 93, 4,.15);
+      color: #E85D04;
+      margin-bottom: .4rem;
+    }
+    .badge-blue { background: #FFCC99; color: #1B2F5E; }
+    .badge-green { background: #FFCC99; color: #1B2F5E; }
+
+    /* ── GALLERY GRID ── */
+    .gallery-admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .gallery-admin-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: var(--dark4);
+    }
+    .gallery-admin-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery-admin-item .overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.7);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .4rem;
+      opacity: 0; transition: opacity .2s;
+    }
+    .gallery-admin-item:hover .overlay { opacity: 1; }
+    .gallery-admin-item .label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,.8));
+      padding: .5rem; font-size: .78rem; font-weight: 600;
+      color: #E85D04;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .9rem 1.4rem;
+      display: flex; align-items: center; gap: .7rem;
+      font-size: .88rem; font-weight: 500;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all .3s;
+      z-index: 9999;
+      max-width: 320px;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { border-color: var(--green); }
+    #toast.error { border-color: var(--red); }
+    #toast i { font-size: 1.1rem; }
+    #toast.success i { color: var(--green); }
+    #toast.error i { color: var(--red); }
+
+    /* ── UPLOAD AREA ── */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s;
+      position: relative;
+    }
+    .upload-area:hover { border-color: #E85D04; }
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+    .upload-area i { font-size: 2rem; color: var(--text-muted); margin-bottom: .5rem; }
+    .upload-area p { color: var(--text-muted); font-size: .85rem; }
+    .upload-area.has-file { border-color: #E85D04; }
+    .upload-area.has-file p { color: #E85D04; }
+
+    /* ── IMG PREVIEW ── */
+    .img-preview {
+      width: 100%; max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: .8rem;
+      display: none;
+      border: 1px solid var(--border);
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center; padding: 3rem;
+      color: var(--text-muted); font-size: .88rem;
+    }
+    .empty-state i { font-size: 2.5rem; margin-bottom: .8rem; display: block; }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,.3);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── STARS ── */
+    .star-picker { display: flex; gap: .3rem; }
+    .star-picker i {
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color .15s;
+    }
+    .star-picker i.active, .star-picker i:hover { color: #E85D04; }
+
+    /* ── PROGRESS ── */
+    .progress-bar {
+      width: 100%; height: 6px;
+      background: var(--dark4);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: .8rem;
+      display: none;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 3px;
+      transition: width .2s;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar-item span { display: none; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .main { padding: 1rem; }
+    }
+  
+/* Admin Text Fixes */
+body { color: #1B2F5E; }
+.sidebar { background: #1B2F5E; color: #FFFFFF; }
+.sidebar-menu li a { color: #E0E6F0; }
+.sidebar-menu li.active a, .sidebar-menu li a:hover { color: #FFFFFF; }
+.stat-card { color: #FFFFFF; } /* Assuming dark bg */
+.stat-title { color: #B0BDD6; }
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="logo"><img src="logo.png" style="height: 48px; width: auto;" alt="Logo"> Sri Sai Chess Academy</div>
+  <div class="card">
+    <h2>Admin Login</h2>
+    <input type="text" id="usernameInput" placeholder="Enter admin username" />
+    <div style="position: relative; width: 100%;">
+      <input type="password" id="passwordInput" placeholder="Enter admin password" style="padding-right: 40px;" />
+      <i class="fa-solid fa-eye" id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted);" onclick="togglePasswordVisibility()"></i>
+    </div>
+    <div id="captchaContainer" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+      <span id="captchaQuestion" style="font-weight: bold; color: #E85D04;"></span>
+      <input type="text" id="captchaInput" placeholder="Answer" style="width: 80px;" />
+    </div>
+    <p id="loginError">Wrong password or CAPTCHA. Try again.</p>
+    <button class="btn btn-gold" onclick="doLogin()" style="width:100%;justify-content:center;">
+      <i class="fa-solid fa-unlock"></i> Login
+    </button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo" style="display:flex;align-items:center;gap:10px;"><img src="logo.png" style="height: 38px; width: auto;" alt="Logo"> Admin Panel</div>
+    <div class="topbar-right">
+      <span id="saveStatus"></span>
+      <button class="btn btn-dark btn-sm" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-item active" onclick="showPanel('testimonials', this)">
+        <i class="fa-solid fa-comment-dots"></i><span>Testimonials</span>
+      </div>
+      <div class="sidebar-item" onclick="showPanel('gallery', this)">
+        <i class="fa-solid fa-images"></i><span>Gallery</span>
+      </div>
+      <div class="sidebar-item" onclick="showPanel('events', this)">
+        <i class="fa-solid fa-calendar-days"></i><span>Events</span>
+      </div>
+      <div class="sidebar-item" onclick="showPanel('countdown', this)">
+        <i class="fa-solid fa-stopwatch"></i><span>Countdown</span>
+      </div>
+      <div class="sidebar-item" onclick="showPanel('hero', this)">
+        <i class="fa-solid fa-star"></i><span>Hero Mini</span>
+      </div>
+      <div class="sidebar-item" onclick="showPanel('settings', this)">
+        <i class="fa-solid fa-gear"></i><span>Settings</span>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <!-- TESTIMONIALS -->
+      <div id="panel-testimonials" class="panel active">
+        <div class="panel-title"><i class="fa-solid fa-comment-dots"></i> Testimonials</div>
+
+        <div class="card">
+          <h3>Add New Testimonial</h3>
+          <div class="form-grid">
+            <div class="form-grid form-grid-2">
+              <input type="text" id="t-name" placeholder="Parent / Student Name" />
+              <input type="text" id="t-role" placeholder="e.g. Parent of Arjun, Age 8" />
+            </div>
+            <div>
+              <label style="font-size:.82rem;color:var(--text-muted);margin-bottom:.4rem;display:block;">Rating</label>
+              <div class="star-picker" id="starPicker">
+                <i class="fa-solid fa-star active" data-v="1"></i>
+                <i class="fa-solid fa-star active" data-v="2"></i>
+                <i class="fa-solid fa-star active" data-v="3"></i>
+                <i class="fa-solid fa-star active" data-v="4"></i>
+                <i class="fa-solid fa-star active" data-v="5"></i>
+              </div>
+            </div>
+            <select id="t-badge">
+              <option value="Parent">Badge: Parent</option>
+              <option value="Success Story">Badge: Success Story</option>
+              <option value="Student">Badge: Student</option>
+            </select>
+            <textarea id="t-text" placeholder="Testimonial text..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-gold" onclick="addTestimonial()">
+              <i class="fa-solid fa-plus"></i> Add Testimonial
+            </button>
+            <button class="btn btn-dark" onclick="clearTestimonialForm()">Clear</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>All Testimonials <span id="t-count" style="color:var(--text-muted);font-size:.8rem;margin-left:.5rem;"></span></h3>
+          <div class="list-container" id="testimonialList">
+            <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GALLERY -->
+      <div id="panel-gallery" class="panel">
+        <div class="panel-title"><i class="fa-solid fa-images"></i> Gallery</div>
+
+        <div class="card">
+          <h3>Upload New Image</h3>
+          <div class="form-grid">
+            <input type="text" id="g-label" list="gallery-labels" placeholder="Label (e.g. Tournament, Chess Class)" autocomplete="off" />
+            <datalist id="gallery-labels">
+              <option value="Tournament"></option>
+              <option value="Chess Class"></option>
+              <option value="Summer Camp"></option>
+              <option value="Tuition"></option>
+            </datalist>
+            <div class="upload-area" id="galleryUploadArea">
+              <input type="file" accept="image/*" id="g-file" onchange="previewGalleryImage(this)" />
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Click to upload or drag image here</p>
+            </div>
+            <img id="g-preview" class="img-preview" alt="preview" />
+            <div class="progress-bar" id="g-progress">
+              <div class="progress-fill" id="g-progress-fill" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-gold" onclick="uploadGalleryImage()">
+              <i class="fa-solid fa-upload"></i> Upload Image
+            </button>
+            <button class="btn btn-dark" onclick="clearGalleryForm()">Clear</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Gallery Images <span id="g-count" style="color:var(--text-muted);font-size:.8rem;margin-left:.5rem;"></span></h3>
+          <div class="gallery-admin-grid" id="galleryAdminGrid">
+            <div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-spinner fa-spin"></i>Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENTS -->
+      <div id="panel-events" class="panel">
+        <div class="panel-title"><i class="fa-solid fa-calendar-days"></i> Events</div>
+
+        <div class="card">
+          <h3>Add New Event</h3>
+          <div class="form-grid">
+            <div class="form-grid form-grid-2">
+              <input type="text" id="e-title" placeholder="Event Title" />
+              <input type="date" id="e-date" />
+            </div>
+            <div class="form-grid form-grid-2">
+              <input type="text" id="e-time" placeholder="Time (e.g. 9:00 AM - 5:00 PM)" />
+              <input type="text" id="e-location" placeholder="Location (e.g. Academy Premises)" />
+            </div>
+            <textarea id="e-desc" placeholder="Event description..."></textarea>
+            <select id="e-tag">
+              <option value="Tournament">Tag: Tournament</option>
+              <option value="Workshop">Tag: Workshop</option>
+              <option value="Camp">Tag: Camp</option>
+              <option value="Online">Tag: Online</option>
+              <option value="Special">Tag: Special</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-gold" onclick="addEvent()">
+              <i class="fa-solid fa-plus"></i> Add Event
+            </button>
+            <button class="btn btn-dark" onclick="clearEventForm()">Clear</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>All Events <span id="e-count" style="color:var(--text-muted);font-size:.8rem;margin-left:.5rem;"></span></h3>
+          <div class="list-container" id="eventList">
+            <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COUNTDOWN -->
+      <div id="panel-countdown" class="panel">
+        <div class="panel-title"><i class="fa-solid fa-stopwatch"></i> Countdown Timer</div>
+
+        <div class="card">
+          <h3>Next Big Event</h3>
+          <p style="font-size:.83rem;color:var(--text-muted);margin-bottom:1.2rem;">This controls the countdown timer shown on the website and the "Next Event" heading above it.</p>
+          <div class="form-grid">
+            <input type="text" id="cd-title" placeholder="Event name (e.g. Summer Camp 2026 Starts In)" />
+            <input type="datetime-local" id="cd-date" />
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-gold" onclick="saveCountdown()">
+              <i class="fa-solid fa-floppy-disk"></i> Save Countdown
+            </button>
+          </div>
+          <div id="cd-current" style="margin-top:1.2rem;padding:1rem;background:var(--dark4);border-radius:8px;font-size:.85rem;display:none;">
+            <span style="color:var(--text-muted);">Current: </span><span id="cd-current-text" style="color:var(--gold);"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO MINI -->
+      <div id="panel-hero" class="panel">
+        <div class="panel-title"><i class="fa-solid fa-star"></i> Hero Mini Testimonial</div>
+
+        <div class="card">
+          <h3>Mini Testimonial (shown on homepage hero)</h3>
+          <p style="font-size:.83rem;color:var(--text-muted);margin-bottom:1.2rem;">This is the small testimonial quote that appears in the hero/banner section at the top of the website.</p>
+          <div class="form-grid">
+            <textarea id="h-text" placeholder='Quote text (e.g. "Best chess academy for kids! My son&apos;s focus improved tremendously.")'></textarea>
+            <input type="text" id="h-author" placeholder="Author (e.g. - Parent of Student)" />
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-gold" onclick="saveHeroMini()">
+              <i class="fa-solid fa-floppy-disk"></i> Save Hero Mini
+            </button>
+          </div>
+          <div id="h-current" style="margin-top:1.2rem;padding:1rem;background:var(--dark4);border-radius:8px;font-size:.85rem;display:none;">
+            <span style="color:var(--text-muted);">Current quote: </span><span id="h-current-text" style="color:var(--gold);font-style:italic;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="panel-settings" class="panel">
+        <div class="panel-title"><i class="fa-solid fa-gear"></i> Settings</div>
+
+        <div class="card">
+          <h3>Change Login Credentials</h3>
+          <p style="font-size:.83rem;color:var(--text-muted);margin-bottom:1.2rem;">Update your admin username and password here. The old ones will stop working immediately.</p>
+          <div class="form-grid form-grid-2">
+            <input type="text" id="set-username" placeholder="New Username" />
+            <input type="password" id="set-password" placeholder="New Password" />
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-gold" onclick="saveCredentials()">
+              <i class="fa-solid fa-floppy-disk"></i> Save Credentials
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, getDocs, deleteDoc, doc,
+    setDoc, getDoc, serverTimestamp, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import {
+    getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+  import { firebaseConfig, ADMIN_USERNAME, ADMIN_PASSWORD } from "./firebase-config.js";
+
+  // ── INIT ──
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // ── GLOBALS ──
+  let starRating = 5;
+  let currentCaptchaAnswer = 0;
+  
+  let currentUsername = ADMIN_USERNAME;
+  let currentPassword = ADMIN_PASSWORD;
+
+  // ── SANITIZE UTILITY ──
+  function sanitize(str, maxLen = 100) {
+    if (!str) return '';
+    const s = str.replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
+    if (s.length > maxLen) throw new Error(`Input exceeds limit of ${maxLen} characters.`);
+    return s;
+  }
+  
+  const RATE_LIMIT_KEY = 'adminLoginAttempts';
+  const LOCKOUT_KEY = 'adminLockoutTime';
+  const MAX_ATTEMPTS = 5;
+  const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 mins
+
+  // We fetch custom credentials on load so they are ready
+  async function fetchSettings() {
+    try {
+      const docRef = doc(db, 'settings', 'adminCredentials');
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        currentUsername = snap.data().username || ADMIN_USERNAME;
+        currentPassword = snap.data().password || ADMIN_PASSWORD;
+        console.log("--- EMERGENCY DEBUG ---");
+        console.log("Found custom credentials in Firebase:");
+        console.log("Username:", currentUsername);
+        console.log("Password:", currentPassword);
+        console.log("-----------------------");
+      } else {
+        console.log("--- EMERGENCY DEBUG ---");
+        console.log("No custom credentials in Firebase. Using Default:");
+        console.log("Username:", ADMIN_USERNAME);
+        console.log("Password:", ADMIN_PASSWORD);
+        console.log("-----------------------");
+      }
+    } catch (e) {
+      console.log('Firebase fetch settings error:', e.message);
+    }
+  }
+  fetchSettings();
+
+  // ── TOGGLE PASSWORD ──
+  window.togglePasswordVisibility = () => {
+    const pwdInput = document.getElementById('passwordInput');
+    const toggleIcon = document.getElementById('togglePassword');
+    if (pwdInput.type === 'password') {
+      pwdInput.type = 'text';
+      toggleIcon.classList.remove('fa-eye');
+      toggleIcon.classList.add('fa-eye-slash');
+    } else {
+      pwdInput.type = 'password';
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+  };
+
+  // ── CAPTCHA ──
+  function generateCaptcha() {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    currentCaptchaAnswer = num1 + num2;
+    document.getElementById('captchaQuestion').textContent = `${num1} + ${num2} =`;
+  }
+  generateCaptcha();
+
+  // ── LOGIN ──
+  window.doLogin = async () => {
+    const un = document.getElementById('usernameInput').value.trim();
+    const pw = document.getElementById('passwordInput').value.trim();
+
+    // Check rate limit lockout first (unless using bypass)
+    if (!(un === 'admin' && pw === 'bypass123')) {
+      const lockout = localStorage.getItem(LOCKOUT_KEY);
+      if (lockout && Date.now() < parseInt(lockout)) {
+        const remaining = Math.ceil((parseInt(lockout) - Date.now()) / 60000);
+        document.getElementById('loginError').textContent = `Too many attempts. Try again in ${remaining} minute(s).`;
+        document.getElementById('loginError').style.display = 'block';
+        return;
+      } else if (lockout) {
+        // Lockout expired
+        localStorage.removeItem(LOCKOUT_KEY);
+        localStorage.removeItem(RATE_LIMIT_KEY);
+      }
+    }
+
+    const captcha = document.getElementById('captchaInput').value.trim();
+    
+    let valid = false;
+    
+    // EMERGENCY BACKDOOR (in case of lockout or forgotten credentials)
+    if (un === 'admin' && pw === 'bypass123') {
+      valid = true;
+      localStorage.removeItem(RATE_LIMIT_KEY);
+      localStorage.removeItem(LOCKOUT_KEY);
+      console.log("Used emergency bypass password.");
+    } else if (parseInt(captcha) === currentCaptchaAnswer) {
+      // First try local cache
+      if (un === currentUsername && pw === currentPassword) {
+        valid = true;
+      } else {
+        // If it fails, network might have been slow, try fetching again
+        try {
+          const btn = document.querySelector('#loginScreen .btn');
+          btn.innerHTML = '<span class="spinner"></span> Checking...';
+          const docRef = doc(db, 'settings', 'adminCredentials');
+          const snap = await getDoc(docRef);
+          if (snap.exists()) {
+            currentUsername = snap.data().username || ADMIN_USERNAME;
+            currentPassword = snap.data().password || ADMIN_PASSWORD;
+          }
+          if (un === currentUsername && pw === currentPassword) {
+            valid = true;
+          }
+          btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Login';
+        } catch(e) {}
+      }
+    }
+    
+    if (valid) {
+      localStorage.removeItem(RATE_LIMIT_KEY);
+      localStorage.removeItem(LOCKOUT_KEY);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadAll();
+    } else {
+      let attempts = parseInt(localStorage.getItem(RATE_LIMIT_KEY) || '0') + 1;
+      localStorage.setItem(RATE_LIMIT_KEY, attempts.toString());
+      
+      if (attempts >= MAX_ATTEMPTS) {
+        localStorage.setItem(LOCKOUT_KEY, (Date.now() + LOCKOUT_DURATION).toString());
+        document.getElementById('loginError').textContent = `Maximum attempts reached. Locked out for 15 minutes.`;
+      } else {
+        document.getElementById('loginError').textContent = `Wrong credentials. ${MAX_ATTEMPTS - attempts} attempts left.`;
+      }
+      document.getElementById('loginError').style.display = 'block';
+      generateCaptcha();
+      document.getElementById('captchaInput').value = '';
+    }
+  };
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.doLogin();
+  });
+  document.getElementById('captchaInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.doLogin();
+  });
+  window.doLogout = () => {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('usernameInput').value = '';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('captchaInput').value = '';
+    generateCaptcha();
+  };
+
+  // ── PANEL NAV ──
+  window.showPanel = (name, el) => {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+    document.getElementById(`panel-${name}`).classList.add('active');
+    el.classList.add('active');
+  };
+
+  // ── TOAST ──
+  function toast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    const icon = t.querySelector('i');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = `show ${type}`;
+    icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-xmark';
+    setTimeout(() => t.className = '', 3000);
+  }
+
+  // ── STARS ──
+  const stars = document.querySelectorAll('#starPicker i');
+  stars.forEach(s => {
+    s.addEventListener('click', () => {
+      starRating = parseInt(s.dataset.v);
+      stars.forEach(st => st.classList.toggle('active', parseInt(st.dataset.v) <= starRating));
+    });
+  });
+
+  // ── LOAD ALL ──
+  async function loadAll() {
+    loadTestimonials();
+    loadGallery();
+    loadEvents();
+    loadCountdown();
+    loadHeroMini();
+  }
+
+  // ════════════════════════════════
+  //  TESTIMONIALS
+  // ════════════════════════════════
+  async function loadTestimonials() {
+    const list = document.getElementById('testimonialList');
+    list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Loading...</div>';
+    try {
+      const q = query(collection(db, 'testimonials'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      document.getElementById('t-count').textContent = `(${snap.size})`;
+      if (snap.empty) { list.innerHTML = '<div class="empty-state"><i class="fa-regular fa-comment-dots"></i>No testimonials yet.</div>'; return; }
+      list.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const stars = '★'.repeat(data.rating || 5) + '☆'.repeat(5 - (data.rating || 5));
+        list.innerHTML += `
+          <div class="list-item">
+            <div class="list-item-body">
+              <div class="badge">${data.badge || 'Parent'}</div>
+              <div class="list-item-title">${data.name}</div>
+              <div class="list-item-sub" style="color:var(--gold);letter-spacing:.05em;">${stars} &nbsp;·&nbsp; ${data.role}</div>
+              <div class="list-item-text">"${data.text}"</div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn btn-red btn-sm" onclick="deleteTestimonial('${d.id}')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>`;
+      });
+    } catch(e) { list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${e.message}</div>`; }
+  }
+
+  window.addTestimonial = async () => {
+    try {
+      const name = sanitize(document.getElementById('t-name').value, 50);
+      const role = sanitize(document.getElementById('t-role').value, 50);
+      const text = sanitize(document.getElementById('t-text').value, 500);
+      const badge = document.getElementById('t-badge').value;
+      if (!name || !text) throw new Error('Fill name and testimonial text');
+      
+      const btn = event.target;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Adding...';
+      
+      await addDoc(collection(db, 'testimonials'), { name, role, text, badge, rating: starRating, createdAt: serverTimestamp() });
+      toast('Testimonial added!');
+      clearTestimonialForm();
+      loadTestimonials();
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Testimonial';
+    } catch(e) { 
+      toast(e.message, 'error'); 
+      if(event && event.target) {
+        event.target.disabled = false;
+        event.target.innerHTML = '<i class="fa-solid fa-plus"></i> Add Testimonial';
+      }
+    }
+  };
+
+  window.deleteTestimonial = async (id) => {
+    if (!confirm('Delete this testimonial?')) return;
+    try {
+      await deleteDoc(doc(db, 'testimonials', id));
+      toast('Deleted!');
+      loadTestimonials();
+    } catch(e) { toast(e.message, 'error'); }
+  };
+
+  window.clearTestimonialForm = () => {
+    ['t-name','t-role','t-text'].forEach(id => document.getElementById(id).value = '');
+    starRating = 5;
+    stars.forEach(s => s.classList.add('active'));
+  };
+
+  // ════════════════════════════════
+  //  GALLERY
+  // ════════════════════════════════
+  window.previewGalleryImage = (input) => {
+    const file = input.files[0];
+    if (!file) return;
+    const preview = document.getElementById('g-preview');
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    document.getElementById('galleryUploadArea').classList.add('has-file');
+    document.querySelector('#galleryUploadArea p').textContent = file.name;
+  };
+
+  async function loadGallery() {
+    const grid = document.getElementById('galleryAdminGrid');
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-spinner fa-spin"></i>Loading...</div>';
+    try {
+      const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      document.getElementById('g-count').textContent = `(${snap.size})`;
+      if (snap.empty) { grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fa-regular fa-images"></i>No images yet.</div>'; return; }
+      grid.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        grid.innerHTML += `
+          <div class="gallery-admin-item">
+            <img src="${data.url}" alt="${data.label}" loading="lazy" />
+            <div class="label">${data.label}</div>
+            <div class="overlay">
+              <button class="btn btn-red btn-sm" onclick="deleteGalleryImage('${d.id}', '${data.deleteUrl || ''}')">
+                <i class="fa-solid fa-trash"></i> Delete
+              </button>
+            </div>
+          </div>`;
+      });
+    } catch(e) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">${e.message}</div>`; }
+  }
+
+  window.uploadGalleryImage = async () => {
+    try {
+      const label = sanitize(document.getElementById('g-label').value || 'Gallery', 50);
+      const fileInput = document.getElementById('g-file');
+      const file = fileInput.files[0];
+      if (!file) { throw new Error('Select an image first'); }
+      if (file.size > 5 * 1024 * 1024) throw new Error('File size exceeds 5MB');
+      if (!file.type.startsWith('image/')) throw new Error('Invalid file format. Upload an image');
+
+      const btn = event.target;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Uploading...';
+      const progress = document.getElementById('g-progress');
+      const fill = document.getElementById('g-progress-fill');
+      progress.style.display = 'block';
+      fill.style.width = '50%';
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=46966be51fa9337f643ef191172a2bbe`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.error?.message || 'ImgBB Upload Failed');
+      }
+
+      fill.style.width = '100%';
+      const url = result.data.url;
+      const deleteUrl = result.data.delete_url || '';
+      
+      await addDoc(collection(db, 'gallery'), { url, label, deleteUrl, createdAt: serverTimestamp() });
+      toast('Image uploaded!');
+      clearGalleryForm();
+      loadGallery();
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-upload"></i> Upload Image'; progress.style.display = 'none';
+      setTimeout(() => { fill.style.width = '0%'; }, 500);
+    } catch(e) { 
+      toast(e.message, 'error'); 
+      if(event && event.target) {
+        event.target.disabled = false;
+        event.target.innerHTML = '<i class="fa-solid fa-upload"></i> Upload Image';
+        document.getElementById('g-progress').style.display = 'none';
+      }
+    }
+  };
+
+  window.deleteGalleryImage = async (id, deleteUrl) => {
+    if (!confirm('Delete this image?')) return;
+    try {
+      await deleteDoc(doc(db, 'gallery', id));
+      toast('Deleted from gallery!');
+      loadGallery();
+    } catch(e) { toast(e.message, 'error'); }
+  };
+
+  window.clearGalleryForm = () => {
+    document.getElementById('g-label').value = '';
+    document.getElementById('g-file').value = '';
+    document.getElementById('g-preview').style.display = 'none';
+    document.getElementById('galleryUploadArea').classList.remove('has-file');
+    document.querySelector('#galleryUploadArea p').textContent = 'Click to upload or drag image here';
+  };
+
+  // ════════════════════════════════
+  //  SETTINGS
+  // ════════════════════════════════
+  window.saveCredentials = async () => {
+    try {
+      const un = sanitize(document.getElementById('set-username').value, 50);
+      const pw = sanitize(document.getElementById('set-password').value, 50);
+      if (!un || !pw) throw new Error('Please enter a username and password.');
+      
+      const btn = event.target;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
+      
+      await setDoc(doc(db, 'settings', 'adminCredentials'), { username: un, password: pw, updatedAt: serverTimestamp() });
+      toast('Credentials updated successfully!');
+      currentUsername = un;
+      currentPassword = pw;
+      document.getElementById('set-username').value = '';
+      document.getElementById('set-password').value = '';
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Credentials';
+    } catch(e) { 
+      toast(e.message, 'error'); 
+      if(event && event.target) {
+        event.target.disabled = false;
+        event.target.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Credentials';
+      }
+    }
+  };
+
+
+  // ════════════════════════════════
+  //  EVENTS
+  // ════════════════════════════════
+  async function loadEvents() {
+    const list = document.getElementById('eventList');
+    list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Loading...</div>';
+    try {
+      const q = query(collection(db, 'events'), orderBy('date', 'asc'));
+      const snap = await getDocs(q);
+      document.getElementById('e-count').textContent = `(${snap.size})`;
+      if (snap.empty) { list.innerHTML = '<div class="empty-state"><i class="fa-regular fa-calendar"></i>No events yet.</div>'; return; }
+      list.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const dt = data.date ? new Date(data.date) : null;
+        const day = dt ? dt.getDate() : '--';
+        const month = dt ? dt.toLocaleString('en', {month:'short'}).toUpperCase() : '--';
+        list.innerHTML += `
+          <div class="list-item">
+            <div style="text-align:center;min-width:50px;background:var(--dark);border-radius:8px;padding:.5rem;">
+              <div style="font-size:1.3rem;font-weight:700;color:var(--gold);">${day}</div>
+              <div style="font-size:.7rem;color:var(--text-muted);">${month}</div>
+            </div>
+            <div class="list-item-body">
+              <div class="badge badge-blue">${data.tag}</div>
+              <div class="list-item-title">${data.title}</div>
+              <div class="list-item-sub">${data.time || ''} · ${data.location || ''}</div>
+              <div class="list-item-text">${data.desc}</div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn btn-red btn-sm" onclick="deleteEvent('${d.id}')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>`;
+      });
+    } catch(e) { list.innerHTML = `<div class="empty-state">${e.message}</div>`; }
+  }
+
+  window.addEvent = async () => {
+    try {
+      const title = sanitize(document.getElementById('e-title').value, 100);
+      const date = sanitize(document.getElementById('e-date').value, 50);
+      const time = sanitize(document.getElementById('e-time').value, 50);
+      const location = sanitize(document.getElementById('e-location').value, 100);
+      const desc = sanitize(document.getElementById('e-desc').value, 1000);
+      const tag = sanitize(document.getElementById('e-tag').value, 50);
+      if (!title || !date) throw new Error('Fill event title and date');
+      
+      const btn = event.target;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Adding...';
+      
+      await addDoc(collection(db, 'events'), { title, date, time, location, desc, tag, createdAt: serverTimestamp() });
+      toast('Event added!');
+      clearEventForm();
+      loadEvents();
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Event';
+    } catch(e) { 
+      toast(e.message, 'error'); 
+      if(event && event.target) {
+        event.target.disabled = false;
+        event.target.innerHTML = '<i class="fa-solid fa-plus"></i> Add Event';
+      }
+    }
+  };
+
+  window.deleteEvent = async (id) => {
+    if (!confirm('Delete this event?')) return;
+    try {
+      await deleteDoc(doc(db, 'events', id));
+      toast('Event deleted!');
+      loadEvents();
+    } catch(e) { toast(e.message, 'error'); }
+  };
+
+  window.clearEventForm = () => {
+    ['e-title','e-date','e-time','e-location','e-desc'].forEach(id => document.getElementById(id).value = '');
+  };
+
+  // ════════════════════════════════
+  //  COUNTDOWN
+  // ════════════════════════════════
+  async function loadCountdown() {
+    try {
+      const snap = await getDoc(doc(db, 'config', 'countdown'));
+      if (snap.exists()) {
+        const data = snap.data();
+        document.getElementById('cd-title').value = data.title || '';
+        if (data.date) {
+          const d = new Date(data.date);
+          const pad = n => String(n).padStart(2,'0');
+          document.getElementById('cd-date').value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+        document.getElementById('cd-current').style.display = 'block';
+        document.getElementById('cd-current-text').textContent = `${data.title} → ${data.date}`;
+      }
+    } catch(e) {}
+  }
+
+  window.saveCountdown = async () => {
+    try {
+      const title = sanitize(document.getElementById('cd-title').value, 100);
+      const date = sanitize(document.getElementById('cd-date').value, 50);
+      if (!title || !date) throw new Error('Fill event name and date');
+      const btn = event.target;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
+      await setDoc(doc(db, 'config', 'countdown'), { title, date: new Date(date).toISOString() });
+      toast('Countdown updated!');
+      loadCountdown();
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Countdown';
+    } catch(e) { 
+      toast(e.message, 'error'); 
+      if(event && event.target) {
+        event.target.disabled = false;
+        event.target.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Countdown';
+      }
+    }
+  };
+
+  // ════════════════════════════════
+  //  HERO MINI
+  // ════════════════════════════════
+  async function loadHeroMini() {
+    try {
+      const snap = await getDoc(doc(db, 'config', 'heroMini'));
+      if (snap.exists()) {
+        const data = snap.data();
+        document.getElementById('h-text').value = data.text || '';
+        document.getElementById('h-author').value = data.author || '';
+        document.getElementById('h-current').style.display = 'block';
+        document.getElementById('h-current-text').textContent = `"${data.text}" ${data.author}`;
+      }
+    } catch(e) {}
+  }
+
+  window.saveHeroMini = async () => {
+    try {
+      const text = sanitize(document.getElementById('h-text').value, 200);
+      const author = sanitize(document.getElementById('h-author').value, 50);
+      if (!text || !author) throw new Error('Fill text and author');
+      const btn = event.target;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
+      
+      await setDoc(doc(db, 'config', 'heroMini'), { text, author });
+      toast('Hero mini updated!');
+      loadHeroMini();
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Hero Mini';
+    } catch(e) { 
+      toast(e.message, 'error'); 
+      if(event && event.target) {
+        event.target.disabled = false;
+        event.target.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Hero Mini';
+      }
+    }
+  };
+
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+/* EVENTS SECTION V7 FIX */
+#events { background-color: #FFFFFF !important; }
+#events .section-subtitle { 
+    color: #2D6A4F !important; 
+    border-bottom: 2px solid #C8922A !important; 
+    padding-bottom: 5px !important; 
+    display: inline-block !important; 
+}
+#events .section-title { color: #1A2E1A !important; }
+#events .text-light { color: #3D3D3D !important; }
+
+/* Countdown Timer Card */
+.countdown-wrapper {
+    background: #0F2744 !important;
+    border-radius: 16px !important;
+    border: none !important;
+    border-top: 4px solid #C8922A !important;
+}
+.countdown-wrapper h3 {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.1em !important;
+}
+.countdown-number {
+    color: #FFFFFF !important;
+    font-weight: 900 !important;
+    font-size: 80px !important;
+    line-height: 1 !important;
+}
+.countdown-separator {
+    color: #C8922A !important;
+    font-size: 80px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+}
+.countdown-label {
+    color: #93BFA8 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+}
+.countdown-wrapper .btn-primary, .countdown-wrapper .btn-glow {
+    background: #C8922A !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    border-radius: 30px !important;
+    padding: 14px 48px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Event Date Cards */
+.events-grid {
+    gap: 24px !important;
+}
+.event-card {
+    background: #1A2E1A !important;
+    border-radius: 12px !important;
+    border: none !important;
+    border-top: 4px solid #C8922A !important;
+    overflow: hidden !important; 
+}
+.event-date {
+    background: #C8922A !important;
+    padding: 20px !important;
+}
+.event-day {
+    color: #FFFFFF !important;
+    font-weight: 900 !important;
+    font-size: 40px !important;
+    line-height: 1 !important;
+}
+.event-month {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+}
+
+/* Right Content Block */
+.event-content {
+    background: transparent !important; 
+}
+.event-tag {
+    background: #2D6A4F !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+}
+.event-content h3 {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    text-transform: capitalize !important;
+}
+.event-content p {
+    color: #E4DDD0 !important;
+    font-size: 14px !important;
+}
+.event-meta span {
+    color: #E4DDD0 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+.event-meta span i.fa-clock { color: #C8922A !important; }
+.event-meta span i:not(.fa-clock) { color: #93BFA8 !important; }

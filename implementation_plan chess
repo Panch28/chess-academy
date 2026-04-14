@@ -1,0 +1,45 @@
+# Sri Sai Chess Academy - Master Implementation Plan
+
+This plan merges the **Premium Design Upgrades** (Obsidian/Gold, GSAP animations, non-laggy interactions) with the **Exact Content Requirements** requested by the client.
+
+## Proposed Changes
+
+### 1. Global Updates
+- **Theme**: Premium Dark mode (Obsidian Black, Midnight Blue, Metallic Gold).
+- **Typography**: Header font: `Cinzel` | Body font: `Montserrat`.
+- **Preloader**: Add a sleek loading screen to prevent initial lag.
+- **WhatsApp Integration**: Update the floating button URL to use the exact message: *"Hi, I want to enroll my child in Sri Sai Chess Academy. Please share details."*
+
+### 2. Section-by-Section Mapping
+
+#### `[MODIFY] index.html` | `[MODIFY] styles.css` | `[MODIFY] script.js`
+
+- **Navbar & Hero**:
+  - Add Tagline: *"Building Smart Minds Through Chess"*.
+  - Update CTA buttons to "Join Now / Register".
+  - Implement full-screen mobile menu overlay and parallax background.
+
+- **About Us**:
+  - Expand layout to cleanly fit: Background, Vision & Mission, "Why Choose Us?", and Achievements.
+
+- **Courses & Activities (Hierarchy Focus)**:
+  - *Main Focus*: Chess Coaching (Beginner → Advanced) displayed prominently.
+  - *Secondary Focus*: Expand extracurriculars into distinct cards (Drawing, Handwriting, Phonics, Academic Tuitions, Summer Camp).
+  - Add layout space for: Description, Age Group, Duration, and Benefits.
+
+- **Teachers**:
+  - Highlight the primary "Chess Coach" profile prominently at the top.
+
+- **[NEW] Events & Updates**:
+  - Inject a brand new section to showcase upcoming Tournaments, Workshops, and Summer Camps.
+
+- **Gallery & Testimonials**:
+  - Update Testimonials to an interactive carousel with star ratings.
+  - Apply dark gradient overlays to all Gallery images to match the premium theme.
+
+- **Contact, Location & Registration**:
+  - **Map**: Embed a Google Maps iframe directly into the page.
+  - **Form fields**: Ensure exact match: Student Name, Age, Parent Name, Phone Number, Course Selection. Add floating label animations to the inputs.
+
+## Execution Strategy
+I will structurally modify [index.html](file:///c:/Users/Panchakshari%20S%20H/Downloads/website%20demos/chess%20academy/index.html) to include the new sections (Events, Maps) and adjust the exact text copy. Then, I will update [styles.css](file:///c:/Users/Panchakshari%20S%20H/Downloads/website%20demos/chess%20academy/styles.css) with the new fonts, premium colors, and responsive layouts. Finally, [script.js](file:///c:/Users/Panchakshari%20S%20H/Downloads/website%20demos/chess%20academy/script.js) will handle the GSAP integrations, preloader, and carousel logic.
