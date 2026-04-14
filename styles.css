@@ -5630,4 +5630,123 @@ button {
     /* control height */
     margin-top: 20px;
     /* spacing tweak */
+}/* Coach Profile Card Section */
+#teachers {
+    background-color: #EDEADE !important;
+}
+
+.coach-profile-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.coach-profile-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: none;
+    border: none;
+}
+
+.coach-profile-card .coach-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    color: #1a2744;
+    margin: 0 0 4px 0;
+}
+
+.coach-profile-card .coach-role {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.13em;
+    color: #8a9ab5;
+    text-transform: uppercase;
+    margin: 0 0 16px 0;
+    font-weight: 600;
+}
+
+.coach-profile-card .coach-divider {
+    width: 32px;
+    height: 2px;
+    background-color: #1a2744;
+    margin: 0 0 20px 0;
+}
+
+.coach-profile-card .coach-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.coach-profile-card .coach-list li {
+    font-size: 13.5px;
+    color: #2d3a55;
+    line-height: 1.55;
+    position: relative;
+    padding-left: 16px;
+    word-wrap: break-word;
+}
+
+.coach-profile-card .coach-list li::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #2d3a55;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .coach-profile-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Global Testimonial Author Colors */
+.testimonial-card .testimonial-author .avatar,
+.testimonial-card .testimonial-author .avatar.bg-gold,
+.testimonial-card .testimonial-author .avatar.bg-white {
+    background-color: transparent !important;
+    color: #1a2744 !important;
+    border: 2px solid #1a2744 !important;
+}
+
+.testimonial-card .testimonial-author h5,
+.testimonial-card .testimonial-author h5.text-white {
+    color: #1a2744 !important;
+}
+
+.testimonial-card .testimonial-author span,
+.testimonial-card .testimonial-author span.gold-text {
+    color: #8a9ab5 !important;
+}
+
+/* Reduce gap in Events section containing the banner */
+#events {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Global Event Cards Text Colors */
+.event-card .event-content h3,
+.event-card .event-tag {
+    color: #0A1F44 !important;
+}
+
+.event-card .event-content p {
+    color: #1A3A5C !important;
+}
+
+.event-card .event-content .event-meta span,
+.event-card .event-content .event-meta span i {
+    color: #2E5580 !important;
 }
