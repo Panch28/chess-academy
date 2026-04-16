@@ -159,10 +159,10 @@ async function loadGallery() {
         items.push(item);
         const galleryItem = document.createElement('div');
         galleryItem.className = 'gallery-item-3d';
+        galleryItem.setAttribute('data-label', item.label);
         galleryItem.innerHTML = `
           <img src="${item.url}" alt="${item.label}" loading="lazy">
           <div class="item-overlay">
-            <div class="item-label">${item.label}</div>
           </div>`;
         track.appendChild(galleryItem);
     });
@@ -303,10 +303,10 @@ async function loadActivitiesGallery() {
       const item = d.data();
       const galleryItem = document.createElement('div');
       galleryItem.className = 'gallery-item-3d';
+      galleryItem.setAttribute('data-label', item.label);
       galleryItem.innerHTML = `
         <img src="${item.url}" alt="${item.label}" loading="lazy">
         <div class="item-overlay">
-          <div class="item-label">${item.label}</div>
         </div>`;
       track.appendChild(galleryItem);
     });
