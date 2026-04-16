@@ -28,6 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
       loadHeroMini(),
       loadTestimonials(),
       loadGallery(),
+      loadActivitiesGallery(),
       loadEvents(),
       loadCountdown(),
     ]);
@@ -282,5 +283,39 @@ async function loadCountdown() {
 
   } catch (e) {
     console.warn('[Firebase] Countdown load failed:', e.message);
+  }
+}
+
+// ─────────────────────────────────────────────
+//  ACTIVITIES GALLERY
+// ─────────────────────────────────────────────
+async function loadActivitiesGallery() {
+  try {
+    const q = query(collection(db, 'activitiesGallery'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    if (snap.empty) return;
+
+    const track = document.getElementById('actGalleryTrack');
+    if (!track) return;
+    track.innerHTML = '';
+
+    snap.forEach(d => {
+      const item = d.data();
+      const galleryItem = document.createElement('div');
+      galleryItem.className = 'gallery-item-3d';
+      galleryItem.innerHTML = `
+        <img src="${item.url}" alt="${item.label}" loading="lazy">
+        <div class="item-overlay">
+          <div class="item-label">${item.label}</div>
+        </div>`;
+      track.appendChild(galleryItem);
+    });
+
+    // Reset and re-init activities gallery engine
+    window._actGalleryInit = false;
+    if (window.initActivitiesGallery) window.initActivitiesGallery();
+
+  } catch (e) {
+    console.warn('[Firebase] Activities Gallery load failed:', e.message);
   }
 }
