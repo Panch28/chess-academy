@@ -690,9 +690,9 @@ function init3DGallery() {
         centerIndex = Math.max(0, Math.min(centerIndex, items.length - 1));
         
         if (items[centerIndex]) {
-            const lbl = items[centerIndex].querySelector('.item-label');
-            if(lbl && centerLabel) {
-                centerLabel.textContent = lbl.textContent;
+            const labelText = items[centerIndex].getAttribute('data-label');
+            if(labelText && centerLabel) {
+                centerLabel.textContent = labelText;
                 centerLabel.classList.add('active');
             }
         }
@@ -883,8 +883,8 @@ function initActivitiesGallery() {
         var sp = spacing();
         var ci = Math.max(0, Math.min(Math.round(cur / sp), items.length - 1));
         if (items[ci] && centerLabel) {
-            var l = items[ci].querySelector('.item-label');
-            if (l) { centerLabel.textContent = l.textContent; centerLabel.classList.add('active'); }
+            var labelText = items[ci].getAttribute('data-label');
+            if (labelText) { centerLabel.textContent = labelText; centerLabel.classList.add('active'); }
         }
         items.forEach(function(item, i) {
             var dist = i * sp - cur;
