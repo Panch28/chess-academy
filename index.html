@@ -21,6 +21,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @media (max-width: 768px) {
+            .teacher-featured {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            .teacher-featured .teacher-image {
+                width: 180px !important;
+                height: 220px !important;
+                margin: 0 auto 1.5rem auto !important;
+                flex-shrink: 0 !important;
+            }
+            .teacher-featured .teacher-image img,
+            .teacher-featured .teacher-image .mentor-image {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                object-position: top !important;
+            }
+            .teacher-featured .teacher-info {
+                width: 100% !important;
+                text-align: left !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
